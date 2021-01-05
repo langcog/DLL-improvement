@@ -188,16 +188,6 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 Overall, the correlation of children's CDI:WG short + DLL scores and their full CDI production scores is quite high ($r=`r round(dll_en_cor,2)`$), but as shown above, for small vocabulary sizes the DLL score overestimates full CDI:WG production scores, while for higher full CDI:WG scores the DLL underestimates vocab size (dotted line has slope $=`r length(en_wg_short_dll_cols)` / `r 395`$).
 However, the CDI:WG short form alone (right panel) shows a similar (and more extreme) overestimation for small vocabulary sizes.
 
-```{r dll-error, echo=F, include=F}
-DLL_rel = psych::ICC(young_en[,c("production","DLLsum")]) # ICC3 .66
-WG_rel = psych::ICC(young_en[,c("production","WGshort")]) # ICC3 .43
-
-dll1_en_rmse <- young_en %>% mutate(DLL_rmse = sqrt((production - DLLsum)^2),
-                    WGshort_rmse = sqrt((production - WGshort)^2)) %>% 
-  summarise(DLL_rmse = mean(DLL_rmse), WGshort_rmse = mean(WGshort_rmse))
-```
-
-The reliability (ICC3) of the DLL + WG short form vs. the full CDI:WG score is `r round(DLL_rel$results$ICC[3], 2)`, higher than the reliability of just the WG short form (ICC3 = `r round(WG_rel$results$ICC[3], 2)`).
 
 ### English DLL Level 2
 
@@ -236,17 +226,6 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 
 Overall, the correlation of children's CDI:WS short + DLL2 scores and their full CDI production scores is quite high ($r=`r round(dll2_en_cor,2)`$), but as shown above, the DLL2 again mostly overestimates  production scores on the full CDI (dotted line has slope $=`r length(en_ws_short_dll_cols)` / `r 680`$).
 In comparison, the CDI:WS short form (A) score only overestimates full CDI scores for smaller vocabulary sizes (<400).
-
-```{r dll2-error, echo=F, include=F}
-DLL2_rel = psych::ICC(old_en[,c("production","DLL2sum")]) # ICC3 .44
-WS_rel = psych::ICC(old_en[,c("production","WSshort")]) # ICC3 .25
-
-dll2_en_rmse <- old_en %>% mutate(DLL_rmse = sqrt((production - DLL2sum)^2),
-                    WSshort_rmse = sqrt((production - WSshort)^2)) %>% 
-  summarise(DLL_rmse = mean(DLL_rmse), WSshort_rmse = mean(WSshort_rmse))
-```
-
-The reliability (ICC3) of the DLL + WS short form vs. the full CDI:WS score is `r round(DLL2_rel$results$ICC[3], 2)`, higher than the reliability of just the WS short form (ICC3 = `r round(WS_rel$results$ICC[3], 2)`).
 
 
 ### Spanish DLL Level 1
@@ -303,16 +282,6 @@ Using Wordbank data from `r nrow(young_sp)` Spanish-speaking children aged 12-18
 As for English, the correlation of Spanish-speaking children's DLL scores and their full CDI:WG production scores is quite high ($r=`r round(dll1_sp_cor,2)`$), but as shown above, their DLL score overestimates the production score on the full CDI at smaller vocabulary sizes (dotted line has slope $=`r length(sp_dll_cols)` / `r 428`$).
 Do note that few children in this dataset have large productive vocabularies.
 
-```{r dll-sp-error, echo=F, include=F}
-DLL_sp_rel = psych::ICC(young_sp[,c("production","DLL1sum")]) 
-WG_sp_rel = psych::ICC(young_sp[,c("production","WGshort")]) 
-
-dll1_sp_rmse <- young_sp %>% mutate(DLL_rmse = sqrt((production - DLL1sum)^2),
-                    WGshort_rmse = sqrt((production - WGshort)^2)) %>% 
-  summarise(DLL_rmse = mean(DLL_rmse), WGshort_rmse = mean(WGshort_rmse))
-```
-
-The reliability (ICC3) of the DLL + WG short form vs. the full CDI:WG score is `r round(DLL_sp_rel$results$ICC[3], 2)`, higher than the reliability of just the WG short form (ICC3 = `r round(WG_sp_rel$results$ICC[3], 2)`).
 
 ### Spanish DLL Level 2
 
@@ -334,16 +303,6 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 
 ```
 
-```{r dll2-sp-error, echo=F, include=F}
-DLL2_sp_rel = psych::ICC(old_sp[,c("production","DLL2sum")]) 
-WS_sp_rel = psych::ICC(old_sp[,c("production","WSshort")]) 
-
-dll2_sp_rmse <- old_sp %>% mutate(DLL_rmse = sqrt((production - DLL2sum)^2),
-                    WSshort_rmse = sqrt((production - WSshort)^2)) %>% 
-  summarise(DLL_rmse = mean(DLL_rmse), WSshort_rmse = mean(WSshort_rmse))
-```
-
-The reliability (ICC3) of the DLL + WS short form vs. the full CDI:WS score is `r round(DLL2_sp_rel$results$ICC[3], 2)`, higher than the reliability of just the WS short form (ICC3 = `r round(WS_sp_rel$results$ICC[3], 2)`).
 
 ## Recommendations
 
