@@ -302,9 +302,8 @@ Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12
 The left panel shows full CDI scores vs. the DLL-ES1 short + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
 
 ```{r cdi-short-DLL1-vs-full-cdi-English, echo=F, message=F, fig.width=8, fig.height=4}
-en_dll_cols = na.omit(match(dll1ENshort$word, colnames(d_mat_en)))
 en_wg_short_cols = na.omit(match(wg_short_en$word, colnames(d_mat_en)))
-en_wg_short_dll_cols = union(en_wg_short_cols, en_dll_cols) # 163 items
+en_wg_short_dll_cols = na.omit(match(dll1short$english, colnames(d_mat_en))) # 160 items
 d_demo_en$production = rowSums(d_mat_en, na.rm=T)
 d_demo_en$DLLsum = rowSums(d_mat_en[,en_wg_short_dll_cols], na.rm=T)
 d_demo_en$WGshort = rowSums(d_mat_en[,en_wg_short_cols], na.rm=T)
@@ -340,9 +339,8 @@ Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking ch
 The left panel shows full CDI scores vs. the DLL-ES2 short + CDI:WS short form (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
 
 ```{r cdi-short-DLL2-vs-full-cdi-English, echo=F, message=F, fig.width=8, fig.height=4}
-en_dll2_cols = na.omit(match(dll2ENshort$word, colnames(d_mat_en)))
-en_ws_short_cols = na.omit(match(ws_short_enA$word, colnames(d_mat_en))) # !! A and B forms for WS short
-en_ws_short_dll_cols = union(en_ws_short_cols, en_dll2_cols) # 166 items
+en_ws_short_cols = na.omit(match(ws_short_enA$word, colnames(d_mat_en))) # 
+en_ws_short_dll_cols = na.omit(match(dll2short$english, colnames(d_mat_en))) # 162 items
 d_demo_en$production = rowSums(d_mat_en, na.rm=T)
 d_demo_en$DLL2sum = rowSums(d_mat_en[,en_ws_short_dll_cols], na.rm=T)
 d_demo_en$WSshort = rowSums(d_mat_en[,en_ws_short_cols], na.rm=T)
@@ -381,18 +379,13 @@ Now we look at overestimation for Spanish DLLs + CDI short forms.
 load(here("data/wordbank_sp_ws_wg_webcdi12-30mos.Rds"))
 d_demo_sp = d_demo
 d_mat_sp = d_mat
-sp_dll_cols = na.omit(match(dll1SPshort$word, colnames(d_mat_sp))) # 61
-#sp_wg_short_cols = na.omit(match(wg_short_sp$word, colnames(d_mat_sp)))
-#sp_wg_short_dll_cols = union(sp_wg_short_cols, sp_dll_cols)
-
-sp_dll2_cols = na.omit(match(dll2SPshort$word, colnames(d_mat_sp))) # 55
 
 sp_wg_short_cols = na.omit(match(wg_short_sp$word, colnames(d_mat_sp)))
 sp_ws_short_cols = na.omit(match(ws_short_sp$word, colnames(d_mat_sp)))
 
 
-sp_wg_short_dll_cols = union(sp_wg_short_cols, sp_dll_cols) # 158
-sp_ws_short_dll_cols = union(sp_ws_short_cols, sp_dll2_cols) # 153
+sp_wg_short_dll_cols = na.omit(match(dll1short$spanish, colnames(d_mat_sp)))
+sp_ws_short_dll_cols = na.omit(match(dll2short$spanish, colnames(d_mat_sp)))
 
 d_demo_sp$production = rowSums(d_mat, na.rm=T)
 d_demo_sp$DLL1sum = rowSums(d_mat_sp[,sp_wg_short_dll_cols], na.rm=T)
@@ -460,15 +453,16 @@ Solid lines show the average ease of DLL items (DLL 1 = red, DLL 2 = orange), an
 Spanish DLL1 items have an average ease of -0.96, while other items on the full CDI have a mean ease of -2.02.
 The Spanish DLL2 shows the least bias: items on it have an average ease of -1.75, while other CDI items have a mean of -1.94.
 
+ToDo: change this analysis to look at DLL long forms? (We don't want to change the short forms..)
 
 ```{r, echo=F, message=F, fig.width=8, fig.height=4}
 en_dll1_ease <- coefs$en %>% mutate(onDLL = 
-                  ifelse(is.element(definition, dll1ENshort$word), 1, 0)) %>%
+                  ifelse(is.element(definition, dll1short$english), 1, 0)) %>%
   group_by(onDLL) %>% 
   summarise(easiness=mean(d), n=n())
 
 en_dll2_ease <- coefs$en %>% mutate(onDLL = 
-                  ifelse(is.element(definition, dll2ENshort$word), 1, 0)) %>%
+                  ifelse(is.element(definition, dll2short$english), 1, 0)) %>%
   group_by(onDLL) %>% 
   summarise(easiness=mean(d), n=n())
 
@@ -483,12 +477,12 @@ en_ws_short_ease <- coefs$en %>% mutate(onWSshort =
   summarise(easiness=mean(d), n=n())
 
 sp_dll1_ease <- coefs$sp %>% mutate(onDLL = 
-                  ifelse(is.element(definition, dll1SPshort$word), 1, 0)) %>%
+                  ifelse(is.element(definition, dll1short$spanish), 1, 0)) %>%
   group_by(onDLL) %>% 
   summarise(easiness=mean(d), n=n())
 
 sp_dll2_ease <- coefs$sp %>% mutate(onDLL = 
-                  ifelse(is.element(definition, dll2SPshort$word), 1, 0)) %>%
+                  ifelse(is.element(definition, dll2short$spanish), 1, 0)) %>%
   group_by(onDLL) %>% 
   summarise(easiness=mean(d), n=n())
 
