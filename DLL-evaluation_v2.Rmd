@@ -67,7 +67,7 @@ The DLL lists are meant to be used together with the original English and Spanis
 dll1short_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 1).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
-dll2short <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 2).csv")) %>% 
+dll2short_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 2).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
 
@@ -79,10 +79,10 @@ dll2exclusions <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long
   rename(english=`English Word`, 
          spanish=`Spanish Word`) # 210
 
-dll1long <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 1).csv")) %>% 
+dll1long_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 1).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
-dll2long <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 2).csv")) %>% 
+dll2long_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 2).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
 ```
@@ -90,7 +90,6 @@ dll2long <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form 
 Now we need to match the DLL words to the wordbank items for which we have IRT parameters.
 
 ```{r match-english-words, echo=F, message=F}
-
 # use with EN WG short form (12-18 mos)
 #dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
 
@@ -105,7 +104,7 @@ dll1short <- dll1short_raw %>% # this is now 168 items...it has the WG short for
                           english == 'patty cake' ~ 'pattycake',
                           english == 'bye or bye bye' ~ 'bye',
                           english == 'teddy bear' ~ 'teddybear',
-                          english == 'his/her' ~ 'his', # hers ?
+                          english == 'his/her' ~ 'his', # hers ? (and should DLL say 'his/hers' ?)
                           english == 'to have' ~ 'have',
                           english == 'shh' ~ 'shh/shush/hush',
                           english == 'to sit' ~ 'sit',
@@ -128,7 +127,7 @@ dll1ENshort_num_matching = length(intersect(dll1short$english, coefs$en$definiti
 #length(intersect(dll1short$english, ws_short_enA$word)) # 36 of the WS
 ```
 
-```{r match-spanish-words}
+```{r match-spanish-words, echo=F, message=F}
 # use with SP WG short form (12-18 mos)
 #dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
 
@@ -165,34 +164,40 @@ setdiff(dll1short$spanish, coefs$sp$definition)
 # are these items also on the short form CDIs?
 #length(intersect(dll1short$spanish, wg_short_sp$word)) # all of the WG
 #length(intersect(dll1short$spanish, ws_short_sp$word)) # 63 of the WS
+```
 
+## Need to also match English and Spanish names to wordbank names for "long form supplements" 1 and 2, and short level 2
+
+```{r}
 #dll1extended <- read_csv(here("DLL/DLL-ES1-extended-ENSP.csv")) #72 items
-#dll1extended_EN_num_matching = length(intersect(dll1extended$word, coefs$en$definition))
-#setdiff(dll1extended$word, coefs$en$definition) 
-# DLL -> wordbank items
-# toy -> toy (object)
-# dress -> dress (object)
-# ears -> ear
-# clock/watch -> split to both "watch (object)" and "clock"
-# swing -> swing (object)
-dll1extended_SP_num_matching = length(intersect(dll1extended$translation, coefs$sp$definition)) # 61 (now 71)
-#setdiff(dll1extended$translation, coefs$sp$definition) 
-# DLL -> wordbank items
-# pipi -> match with pipí ?? 
-# globo -> globo/bomba
-# plátano -> plátano/banana
-# orejas -> oreja
-# dedos -> dedo
-# escalera -> escaleras
-# bolsa -> bolsa (clothing)  [could also match bolsa (household) ??]
-# tienda -> tienda/mercado
-# papá* -> papá
-# hacer la meme -> NO MATCH (only possible is "hacer"..)
-# soplar/aventar -> split to "soplar" and "aventar"
+
+dll1long <- dll1long_raw %>% mutate(english = tolower(english)) %>%
+  mutate(english = case_when(english == 'daddy (or word used in your family)' ~ 'daddy*',
+                          english == 'toy' ~ 'toy (object)',
+                          english == 'swing' ~ 'swing (object)', # or swing (action) ?
+                          english == 'dress' ~ 'dress (object)',
+                          TRUE ~ english))
+
+
+dll1long_EN_num_matching = length(intersect(dll1long$english, coefs$en$definition)) # 74 / 74 match
+
+dll1long <- dll1long %>% mutate(spanish = tolower(spanish)) %>%
+  separate(col = spanish, into = c("spanish", NA), sep=" \\(") %>%
+  mutate(spanish = case_when(spanish == 'pipi' ~ 'pipí', # is this a match?
+                             spanish == 'orejas' ~ 'oreja',
+                             spanish == 'dedos' ~ 'dedo',
+                             spanish == 'escalera' ~ 'escaleras', 
+                             spanish == 'bolsa' ~ 'bolsa (clothing)', # or bolsa (household) ?
+                             spanish == 'papá/papi' ~ 'papá', 
+                             spanish == 'cosquillita' ~ 'cosquillitas', 
+                             spanish == 'hacer la meme' ~ 'siesta', # close enough ?  or hacer?
+                             TRUE ~ spanish))
+
+dll1long_SP_num_matching = length(intersect(dll1long$spanish, coefs$sp$definition)) # 74 / 74 match
 
 # use with SP WS short form (18-30 mos)
-dll2SPshort <- read_csv(here("DLL/DLL-ES2-short-Spanish.csv")) # 73 items
-dll2SPshort_num_matching = length(intersect(dll2SPshort$word, coefs$sp$definition)) # 46 (now 54)
+#dll2SPshort <- read_csv(here("DLL/DLL-ES2-short-Spanish.csv")) # 73 items
+#dll2SPshort_num_matching = length(intersect(dll2SPshort$word, coefs$sp$definition)) # 46 (now 54)
 #setdiff(dll2SPshort$word, coefs$sp$definition) 
 # no matches: juegos, el puré de manzana, coca, la galleta salada (tho galleta),
 #  mentón, bandeja, trapeador, ir de compras, perseguir, abrazar, pretender/fingir,
@@ -212,16 +217,18 @@ dll2SPshort_num_matching = length(intersect(dll2SPshort$word, coefs$sp$definitio
 # at night -> "tonight" (wrong translation)
 
 # use with EN WS short form (A or B??)
-dll2ENshort <- read_csv(here("DLL/DLL-ES2-short-English.csv")) # 79
-dll2ENshort_num_matching = length(intersect(dll2ENshort$word, coefs$en$definition)) # 67
+#dll2ENshort <- read_csv(here("DLL/DLL-ES2-short-English.csv")) # 79
+#dll2ENshort_num_matching = length(intersect(dll2ENshort$word, coefs$en$definition)) # 67
 #setdiff(dll2ENshort$word, coefs$en$definition) 
 # no wordbank match: snake, drum, mustache, matches, pot, bell, godmother,
 # let's go, know, turn off (tho "off" and "turn around"), win, in the morning (tho morning)
 
 # "rain" is on both short WS form A and DLL-2 EN short 
-intersect(ws_short_enA$word, dll2ENshort$word)
-intersect(ws_short_enB$word, dll2ENshort$word) # 16 on DLL + short WS B: moo, truck, bottle, ..
+#intersect(ws_short_enA$word, dll2ENshort$word)
+#intersect(ws_short_enB$word, dll2ENshort$word) # 16 on DLL + short WS B: moo, truck, bottle, ..
+```
 
+```{r load-wordbank-data, echo=F, message=F}
 load(here("data/wordbank_eng_ws_wg_webcdi31-36mos.Rds"))
 
 too_young <- which(d_demo$age < 12) # 378 children can't be producing any words yet
@@ -233,16 +240,14 @@ d_mat_en = d_mat[-too_young,]
 #dll1ENshort[which(!is.element(dll1ENshort$word, colnames(d_mat))),]
 #dll1SPshort[which(!is.element(dll1SPshort$word, coefs$sp$definition)),] # tostada, 
 ```
-Notes: the DLL lists *chicken*, whereas wordbank has both *chicken (food)* and *chicken (animal)*. Similar for *water* (beverage / not beverage both included in wordbank). 
-We will use all related wordbank items in our analysis.
-There were also a lot of plurals listed on the DLL that were singular in wordbank (e.g., ears/orejas, dedos/fingers).
+
 
 English DLL items not in our wordbank IRT model: *one, two, three*, *family*, *drum*, *good morning*, *also*, and *many*.
 Spanish DLL items not in our wordbank IRT model: *tostada*, *algunos*, *alimentar*, *sonreír*, *no hay más* (although we have *no* and *no hay*, as well as *más*), and lastimado (but we have *lastimar(se)*).
 
 DLL2-Spanish has "esta noche" translated as "at night", but should be "tonight".
 DLL also has "puede", a conjugation of infinitive verb *poder* (which is in Wordbank).
-Wordbank and DLL also often disagree about plural, e.g. *escalera*, and *pierna* on the DLL correspond to *escaleras* and *piernas* in Wordbank. (See also *brazos* and *manos.*)
+Wordbank and DLL also often disagree about plural, e.g. *escalera*, and *pierna* on the DLL correspond to *escaleras* and *piernas* in Wordbank. (See also *brazos*, *manos*, *vasos*, and *llaves*.)
 
 ## Does the DLL short form recover full form scores?
 
