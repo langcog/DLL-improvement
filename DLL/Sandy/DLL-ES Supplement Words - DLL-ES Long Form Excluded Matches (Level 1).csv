@@ -1,0 +1,95 @@
+English Word,Spanish Word,Include or Exclude from Long Form Supplement,Long Form Supplement Exclusion Reason
+animal,animal,Excluded,Generic
+bee,abeja (bee),Excluded,Less than 10% for at least one of the words
+butterfly,mariposa (butterfly),Excluded,Less than 10% for at least one of the words
+deer,venado (deer),Excluded,Less than 10% for at least one of the words
+donkey,burro (donkey),Excluded,Less than 10% for at least one of the words
+elephant,elefante (elephant),Excluded,Less than 10% for at least one of the words
+fish,pescado (fish),Excluded,Less than 10% for at least one of the words
+giraffe,jirafa (giraffe),Excluded,Less than 10% for at least one of the words
+lamb,borrego (lamb),Excluded,Less than 10% for at least one of the words
+owl,búho (owl),Excluded,Less than 10% for at least one of the words
+penguin,pingüino (penguin),Excluded,Less than 10% for at least one of the words
+pig,puerco (pig),Excluded,Less than 10% for at least one of the words
+squirrel,ardilla (squirrel),Excluded,Less than 10% for at least one of the words
+turkey,guajolote (turkey),Excluded,Less than 10% for at least one of the words
+turtle,tortuga (turtle),Excluded,Less than 10% for at least one of the words
+firetruck,camión de bomberos (fire truck),Excluded,Less than 10% for at least one of the words
+motorcycle,moto (motorcycle),Excluded,Less than 10% for at least one of the words
+coffee,café (coffee),Excluded,Less than 10% for at least one of the words
+food,comida (food),Excluded,Generic
+oranges,naranja (orange),Excluded,Less than 10% for at least one of the words
+boots,botas (boots),Excluded,Less than 10% for at least one of the words
+shorts,shorts (shorts),Excluded,Less than 10% for at least one of the words
+sweater,suéter (sweater),Excluded,Less than 10% for at least one of the words
+zipper,cierre (zipper),Excluded,Less than 10% for at least one of the words
+cheek,cachete (cheek),Excluded,Less than 10% for at least one of the words
+knee,rodillas (knees),Excluded,Less than 10% for at least one of the words
+tummy,panza (tummy),Excluded,Less than 10% for at least one of the words
+bedroom,recámara (bedroom),Excluded,Less than 10% for at least one of the words
+garage,cochera/garaje (garage),Excluded,Less than 10% for at least one of the words
+living room,sala (living room),Excluded,Less than 10% for at least one of the words
+oven,horno (oven),Excluded,Less than 10% for at least one of the words
+potty,bacinica (potty),Excluded,Less than 10% for at least one of the words
+stove,estufa (stove),Excluded,Less than 10% for at least one of the words
+fork,tenedor (fork),Excluded,Less than 10% for at least one of the words
+hammer,martillo (hammer),Excluded,Less than 10% for at least one of the words
+scissors,tijeras (scissors),Excluded,Less than 10% for at least one of the words
+toothbrush,cepillo de dientes (toothbrush),Excluded,Less than 10% for at least one of the words
+vacuum,aspiradora (vacuum),Excluded,Less than 10% for at least one of the words
+beach,playa (beach),Excluded,Less than 10% for at least one of the words
+garden,jardín (garden),Excluded,Less than 10% for at least one of the words
+park,parque (park),Excluded,Less than 10% for at least one of the words
+pool,alberca/piscina (pool),Excluded,Less than 10% for at least one of the words
+school,escuela (school),Excluded,Less than 10% for at least one of the words
+slide,resbaladilla (slide),Excluded,Less than 10% for at least one of the words
+snow,nieve (snow),Excluded,Less than 10% for at least one of the words
+star,estrella (star),Excluded,Less than 10% for at least one of the words
+zoo,zoológico (zoo),Excluded,Less than 10% for at least one of the words
+aunt,tía (aunt),Excluded,exclusion for people words/names
+brother,hermano (brother),Excluded,exclusion for people words/names
+grandpa (or word used in your family),abuelo (grandpa),Excluded,exclusion for people words/names
+child's own name,nombre del niño/a (child's name),Excluded,exclusion for people words/names
+person,persona (person),Excluded,Generic
+sister,hermana (sister),Excluded,exclusion for people words/names
+teacher,maestra/maestro (teacher),Excluded,exclusion for people words/names
+uncle,tío (uncle),Excluded,exclusion for people words/names
+breakfast,desayunar (to have breakfast),Excluded,Non-concrete
+dinner,cenar (to have dinner/to dine),Excluded,Non-concrete
+Draw,dibujar (to draw),Excluded,Less than 10% for at least one of the words
+Hurry,apurarse (to hurry),Excluded,Non-concrete
+Read,leer (to read),Excluded,Less than 10% for at least one of the words
+Run,correr,Excluded,Less than 10% for at least one of the words
+Show,enseñar,Excluded,Less than 10% for at least one of the words
+Day,día (day),Excluded,Non-concrete
+Bad,malo,Excluded,Non-concrete
+Blue,azul (blue),Excluded,Non-concrete
+Careful,cuidado (careful),Excluded,Non-concrete
+Clean,limpio (clean),Excluded,Non-concrete
+Cold,frío (cold),Excluded,Non-concrete
+Dry,secar(se),Excluded,Less than 10% for at least one of the words
+Empty,vacío (empty),Excluded,Less than 10% for at least one of the words
+Happy,contento (happy),Excluded,Non-concrete
+Hard,difícil (hard),Excluded,Non-concrete
+Hungry,hambre (hungry),Excluded,Non-concrete
+Little,poco (little),Excluded,Non-concrete
+Old,viejo (old - masculine),Excluded,Non-concrete
+Red,rojo (red),Excluded,Non-concrete
+Scared,"miedo (scared, fear)",Excluded,Non-concrete
+Sick,enfermo (sick),Excluded,Non-concrete
+Sleepy,sueño (sleepy),Excluded,Non-concrete
+Thirsty,sed (thirsty),Excluded,Non-concrete
+Wet,mojar(se) (to be wet),Excluded,Less than 10% for at least one of the words
+Yucky,fuchi (yuck),Excluded,Non-concrete
+Her,"ella (she, her)",Excluded,Non-concrete
+It,ésta (it),Excluded,Non-concrete
+Mine,mía (mine),Excluded,Non-concrete
+That,eso (that),Excluded,Non-concrete
+You,te (you),Excluded,Non-concrete
+Your,tuya (yours),Excluded,Non-concrete
+What,qué (what),Excluded,Non-concrete
+Why,por qué (why),Excluded,Non-concrete
+Down,"abajo (down, below)",Excluded,Non-concrete
+Inside,adentro (inside),Excluded,Non-concrete
+Up,"arriba (up, above)",Excluded,Non-concrete
+All,todo (all),Excluded,Less than 10% for at least one of the words

@@ -31,7 +31,7 @@ rm(coefs_2pl, fscores_2pl, mod_2pl)
 ```{r load-cdi-short-forms, echo=F, message=F}
 wg_short_en <- read_csv(here("DLL/eng-wg-short.csv")) # 89
 ws_short_enA <- read_csv(here("DLL/eng-ws-shortA.csv")) # 100
-ws_short_enB <- read_csv(here("DLL/eng-ws-shortB.csv")) # 100
+#ws_short_enB <- read_csv(here("DLL/eng-ws-shortB.csv")) # 100 - note they did not use this one
 
 #length(intersect(wg_short_en$word, coefs$en$definition)) # all match
 
@@ -63,23 +63,111 @@ Our original concern was that the current DLL-ES test might not perform well for
 
 The DLL lists are meant to be used together with the original English and Spanish MCDI short forms.
 
-```{r load-DLL-lists, echo=F, message=F}
+```{r load-all-DLL-lists, echo=F, message=F}
+dll1short_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 1).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) 
+dll2short <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 2).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) 
+
+# Level 1 exclusions: examine to see if we find some equal difficulty, informative matches?
+dll1exclusions <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Excluded Matches (Level 1).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) # 94
+dll2exclusions <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Excluded Matches (Level 2).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) # 210
+
+dll1long <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 1).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) 
+dll2long <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 2).csv")) %>% 
+  rename(english=`English Word`, 
+         spanish=`Spanish Word`) 
+```
+
+Now we need to match the DLL words to the wordbank items for which we have IRT parameters.
+
+```{r match-english-words, echo=F, message=F}
 
 # use with EN WG short form (12-18 mos)
-dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
-dll1ENshort_num_matching =  length(intersect(dll1ENshort$word, coefs$en$definition)) # 75
-#setdiff(dll1ENshort$word, coefs$en$definition) 
+#dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
 
-# water is on both dll and short WG:
-intersect(wg_short_en$word, dll1ENshort$word)
+dll1short <- dll1short_raw %>% # this is now 168 items...it has the WG short form included
+  mutate(english = tolower(english)) %>%
+  mutate(english = case_when(english == 'i' ~ 'I',
+                          english == 'tv (television)' ~ 'TV',
+                          english == 'water' ~ 'water (beverage)',
+                          english == 'grandma (or word used in your family)' ~ 'grandma*',
+                          english == 'mommy (or word used in your family)' ~ 'mommy*',
+                          english == 'choo choo (train sound)' ~ 'choo choo',
+                          english == 'patty cake' ~ 'pattycake',
+                          english == 'bye or bye bye' ~ 'bye',
+                          english == 'teddy bear' ~ 'teddybear',
+                          english == 'his/her' ~ 'his', # hers ?
+                          english == 'to have' ~ 'have',
+                          english == 'shh' ~ 'shh/shush/hush',
+                          english == 'to sit' ~ 'sit',
+                          english == 'to be' ~ 'be',
+                          english == 'put, put on' ~ 'put',
+                          english == 'to write' ~ 'write',
+                          english == 'arms' ~ 'arm',
+                          english == 'church (or word used in your family)' ~ 'church*',
+                          english == 'want' ~ 'wanna/want to',
+                          english == 'in' ~ 'inside/in', # into ?
+                          TRUE ~ english))
 
+dll1ENshort_num_matching = length(intersect(dll1short$english, coefs$en$definition)) 
+# 75/81 (GK version)
+# 160/168 (Sandy)
+#setdiff(dll1short$english, coefs$en$definition) 
+
+# are these items also on the short form CDIs?
+#length(intersect(dll1short$english, wg_short_en$word)) # all of the WG
+#length(intersect(dll1short$english, ws_short_enA$word)) # 36 of the WS
+```
+
+```{r match-spanish-words}
 # use with SP WG short form (12-18 mos)
-dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
-dll1SPshort_num_matching = length(intersect(dll1SPshort$word, coefs$sp$definition)) # 59
-#setdiff(dll1SPshort$word, coefs$sp$definition)
+#dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
 
-dll1extended <- read_csv(here("DLL/DLL-ES1-extended-ENSP.csv")) #72 items
-dll1extended_EN_num_matching = length(intersect(dll1extended$word, coefs$en$definition))
+dll1short <- dll1short %>% # this is now 168 items...it has the WG short form included
+  mutate(spanish = tolower(spanish)) %>%
+  separate(col = spanish, into = c("spanish", NA), sep=" \\(") %>%
+  # Expected 2 pieces. Additional pieces discarded in 4 rows [63, 90, 91, 159].Expected 2 pieces. Missing pieces filled with `NA` in 14 rows [13, 22, 27, 30, 36, 52, 54, 64, 66, 80, 88, 89, 129, 144].
+  mutate(spanish = case_when(spanish == 'mamá/mami' ~ 'mamá',
+                             spanish == 'calcetines' ~ 'calcetín',
+                             spanish == 'tomar baño / bañarse' ~ 'baño', # verb -> noun.. tomar(se) ?
+                             spanish == 'espera' ~ 'esperar(se)', # close enough ?
+                             spanish == 'acabar(se)' ~ 'acabar',
+                             spanish == 'no hay más' ~ 'no hay', # or "más" ?
+                             spanish == 'rapido' ~ 'rápido (descriptive)', # or rápido (quantifiers)
+                             spanish == 'lastimado' ~ 'lastimar(se)', # close enough ?
+                             spanish == 'otro' ~ 'otro/otra vez', # close enough ?
+                             spanish == 'quiquiriqui' ~ 'quiquiriquí', # DLL missing acent
+                             spanish == 'brazos' ~ 'brazo',
+                             spanish == 'manos' ~ 'mano',
+                             spanish == 'vaso' ~ 'vasos',
+                             spanish == 'llaves' ~ 'llave',
+                             spanish == 'adiós/byebye' ~ 'adíos/byebye', # wordbank accent is incorrect
+                             spanish == 'uno, dos, tres' ~ 'uno dos tres...',
+                             spanish == 'shh' ~ 'shhh',
+                             spanish == 'ver' ~ 'ver(se)',
+                             spanish == '¿dónde está?' ~ 'dónde', # close enough ? 
+                             TRUE ~ spanish))
+
+dll1SPshort_num_matching = length(intersect(dll1short$spanish, coefs$sp$definition)) # was 59 on GK version
+# 158 / 168
+setdiff(dll1short$spanish, coefs$sp$definition)
+# no match: tostada, alimentar, sonreír, algunos, también
+
+# are these items also on the short form CDIs?
+#length(intersect(dll1short$spanish, wg_short_sp$word)) # all of the WG
+#length(intersect(dll1short$spanish, ws_short_sp$word)) # 63 of the WS
+
+#dll1extended <- read_csv(here("DLL/DLL-ES1-extended-ENSP.csv")) #72 items
+#dll1extended_EN_num_matching = length(intersect(dll1extended$word, coefs$en$definition))
 #setdiff(dll1extended$word, coefs$en$definition) 
 # DLL -> wordbank items
 # toy -> toy (object)

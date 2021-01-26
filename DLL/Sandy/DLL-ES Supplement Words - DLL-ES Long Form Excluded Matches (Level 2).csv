@@ -1,0 +1,211 @@
+English Word,Spanish Word,Include or Exclude from Long Form Supplement,Long Form Supplement Exclusion Reason
+alligator,cocodrilo (crocidile),Excluded,Less than 10% for at least one of the words
+animal,animal (animal),Excluded,Generic
+deer,venado (deer),Excluded,Less than 10% for at least one of the words
+donkey,burro (donkey),Excluded,Less than 10% for at least one of the words
+elephant,elefante (elephant),Excluded,Less than 10% for at least one of the words
+fish (animal),pescado (fish) (animal),Excluded,Less than 10% for at least one of the words
+giraffe,jirafa (giraffe),Excluded,Less than 10% for at least one of the words
+goose,ganso (goose),Excluded,Less than 10% for at least one of the words
+hen,gallina (hen),Excluded,Less than 10% for at least one of the words
+lamb,borrego (lamb),Excluded,Less than 10% for at least one of the words
+mouse,ratón (mouse),Excluded,Less than 10% for at least one of the words
+owl,búho (owl),Excluded,Less than 10% for at least one of the words
+penguin,pingüino (penguin),Excluded,Less than 10% for at least one of the words
+pig,puerco (pig),Excluded,Less than 10% for at least one of the words
+squirrel,ardilla (squirrel),Excluded,Less than 10% for at least one of the words
+turkey,guajolote (turkey),Excluded,Less than 10% for at least one of the words
+turtle,tortuga (turtle),Excluded,Less than 10% for at least one of the words
+wolf,lobo (wolf),Excluded,Less than 10% for at least one of the words
+zebra,cebra (zebra),Excluded,Less than 10% for at least one of the words
+bus,autobús (bus),Excluded,Less than 10% for at least one of the words
+fire truck,camión de bombero (fire truck),Excluded,Less than 10% for at least one of the words
+helicopter,helicóptero (helicopter),Excluded,Less than 10% for at least one of the words
+sled,trineo,Excluded,Less than 10% for at least one of the words
+stroller,carreola (stroller),Excluded,Less than 10% for at least one of the words
+tractor,tractor,Excluded,Less than 10% for at least one of the words
+tricycle,triciclo (tricycle),Excluded,Less than 10% for at least one of the words
+bat,bat (bat),Excluded,Less than 10% for at least one of the words
+crayon,crayolas (crayon),Excluded,Less than 10% for at least one of the words
+pen,pluma/plumones (pen),Excluded,Less than 10% for at least one of the words
+play dough,plastilina (play-doh),Excluded,Less than 10% for at least one of the words
+toy,juguete (toy),Excluded,Generic
+butter,mantequilla (butter),Excluded,Less than 10% for at least one of the words
+carrots,zanahoria (carrot),Excluded,Less than 10% for at least one of the words
+fish (food),pescado (fish) (food),Excluded,Less than 10% for at least one of the words
+food,comida (food),Excluded,Generic
+green beans,ejotes (green beans),Excluded,Less than 10% for at least one of the words
+gum,chicle (chewing gum),Excluded,Less than 10% for at least one of the words
+hamburger,hamburguesa (hamburger),Excluded,Less than 10% for at least one of the words
+jelly,mermelada (jam),Excluded,Less than 10% for at least one of the words
+jello,gelatina (jello),Excluded,Less than 10% for at least one of the words
+lollipop,paleta (lollipop),Excluded,Less than 10% for at least one of the words
+melon,melón (melon),Excluded,Less than 10% for at least one of the words
+pancake,hot cake,Excluded,Less than 10% for at least one of the words
+peanut butter,"peanut butter (this gives English credit, add options for Spanish translations)",Excluded,Less than 10% for at least one of the words
+salt,sal (salt),Excluded,Less than 10% for at least one of the words
+sauce,salsa (sauce),Excluded,Less than 10% for at least one of the words
+tuna,atún (tuna),Excluded,Less than 10% for at least one of the words
+vanilla,vainilla (vanilla),Excluded,Less than 10% for at least one of the words
+vitamins,vitaminas (vitamins),Excluded,Less than 10% for at least one of the words
+boots,botas (boots),Excluded,Less than 10% for at least one of the words
+gloves,guantes (glove),Excluded,Less than 10% for at least one of the words
+pajamas,pijama (pajamas),Excluded,Less than 10% for at least one of the words
+scarf,bufanda (scarf),Excluded,Less than 10% for at least one of the words
+shorts,shorts (shorts),Excluded,Less than 10% for at least one of the words
+slipper,chancla (flip flop),Excluded,Less than 10% for at least one of the words
+tights,medias (tights),Excluded,Less than 10% for at least one of the words
+underpants,calzón (underpants),Excluded,Less than 10% for at least one of the words
+zipper,cierre (zipper),Excluded,Less than 10% for at least one of the words
+lips,labios (lips),Excluded,Less than 10% for at least one of the words
+shoulder,hombro (shoulder),Excluded,Less than 10% for at least one of the words
+vagina (or word used in your family),vagina (vagina) (o la palabra que use su familia para esto),Excluded,Less than 10% for at least one of the words
+closet,ropero/closet (closet),Excluded,Less than 10% for at least one of the words
+drawer,cajón (drawer),Excluded,Less than 10% for at least one of the words
+dryer,secadora (dryer),Excluded,Less than 10% for at least one of the words
+garage,cochera/garage (garage),Excluded,Less than 10% for at least one of the words
+living room,sala (living room),Excluded,Less than 10% for at least one of the words
+refrigerator,refrigerador (refrigerator),Excluded,Less than 10% for at least one of the words
+shower,regadera/ducha (shower),Excluded,Less than 10% for at least one of the words
+sink,lavabo (sink),Excluded,Less than 10% for at least one of the words
+sofa,sofá (sofa),Excluded,Less than 10% for at least one of the words
+washing machine,lavadora (washing machine),Excluded,Less than 10% for at least one of the words
+basket,canasta (basket),Excluded,Less than 10% for at least one of the words
+bucket,cubeta (bucket),Excluded,Less than 10% for at least one of the words
+camera,cámara (camera),Excluded,Less than 10% for at least one of the words
+fork,tenedor (fork),Excluded,Less than 10% for at least one of the words
+hammer,martillo (hammer),Excluded,Less than 10% for at least one of the words
+knife,cuchillo (knife),Excluded,Less than 10% for at least one of the words
+lamp,lámpara (lamp),Excluded,Less than 10% for at least one of the words
+nail,clavo (nail),Excluded,Less than 10% for at least one of the words
+napkin,servilleta (napkin),Excluded,Less than 10% for at least one of the words
+radio,radio (radio),Excluded,Less than 10% for at least one of the words
+scissors,tijeras (scissors),Excluded,Less than 10% for at least one of the words
+tissue/kleenex,"pañuelo (handkerchief, tissue)",Excluded,Less than 10% for at least one of the words
+toothbrush,cepillo de dientes (toothbrush),Excluded,Less than 10% for at least one of the words
+vacuum,aspiradora (vacuum),Excluded,Less than 10% for at least one of the words
+backyard,patio,Excluded,Less than 10% for at least one of the words
+garden,jardín (garden),Excluded,Less than 10% for at least one of the words
+pool,alberca/piscina (pool),Excluded,Less than 10% for at least one of the words
+roof,techo (roof),Excluded,Less than 10% for at least one of the words
+shovel,pala (shovel),Excluded,Less than 10% for at least one of the words
+slide,resbaladilla (slide),Excluded,Less than 10% for at least one of the words
+snow,nieve (snow),Excluded,Less than 10% for at least one of the words
+snowman,muñeco de nieve (snowman),Excluded,Less than 10% for at least one of the words
+wind,viento/aire (wind),Excluded,Less than 10% for at least one of the words
+beach,playa (beach),Excluded,Less than 10% for at least one of the words
+circus,circo (circus),Excluded,Less than 10% for at least one of the words
+country,campo (country/field),Excluded,Less than 10% for at least one of the words
+woods,bosque (forest),Excluded,Less than 10% for at least one of the words
+movie,cine (movie theater),Excluded,Less than 10% for at least one of the words
+zoo,zoológico (zoo),Excluded,Less than 10% for at least one of the words
+aunt,tía (aunt),Excluded,exclusion for people words/names
+babysitter,nana (babysitter),Excluded,exclusion for people words/names
+brother,hermano (brother),Excluded,exclusion for people words/names
+doctor,doctor,Excluded,exclusion for people words/names
+grandma (or name/word used in your family),abuela (grandma),Excluded,exclusion for people words/names
+grandpa (or name/word used in your family),abuelo (grandpa),Excluded,exclusion for people words/names
+nurse,enfermera (nurse),Excluded,exclusion for people words/names
+child's own name,nombre del niña/o (child's own name),Excluded,exclusion for people words/names
+police,policía (police),Excluded,exclusion for people words/names
+sister,hermana (sister),Excluded,exclusion for people words/names
+teacher,maestra (teacher),Excluded,exclusion for people words/names
+uncle,tío (uncle),Excluded,exclusion for people words/names
+breakfast,desayunar (to eat breakfast),Excluded,Less than 10% for at least one of the words
+dinner,cenar,Excluded,Less than 10% for at least one of the words
+lunch,almorzar,Excluded,Less than 10% for at least one of the words
+nap,siesta (nap),Excluded,Less than 10% for at least one of the words
+Bite,morder (to bite),Excluded,Less than 10% for at least one of the words
+Break (says beak in the PDF),romper (to break),Excluded,Less than 10% for at least one of the words
+Bring,traer(se) (to bring),Excluded,Less than 10% for at least one of the words
+Climb,subir(se) (to climb),Excluded,Less than 10% for at least one of the words
+Cook,cocinar (to cook),Excluded,Less than 10% for at least one of the words
+Cover,tapar (to cover),Excluded,Less than 10% for at least one of the words
+Cut,cortar (to cut),Excluded,Less than 10% for at least one of the words
+Draw,dibujar (to draw),Excluded,Less than 10% for at least one of the words
+Find,encontrar (to find),Excluded,Less than 10% for at least one of the words
+Give,dar (to give),Excluded,Less than 10% for at least one of the words
+Have,tener (to have),Excluded,Less than 10% for at least one of the words
+Hide,esconder(se) (to hide),Excluded,Less than 10% for at least one of the words
+Hurry,apurar(se) (to hurry),Excluded,Less than 10% for at least one of the words
+Paint,pintar (to paint),Excluded,Less than 10% for at least one of the words
+Pull,jalar (to pull),Excluded,Less than 10% for at least one of the words
+Push,empujar (to push),Excluded,Less than 10% for at least one of the words
+Put,meter(se) (to put (in)),Excluded,Less than 10% for at least one of the words
+Read,leer (to read),Excluded,Less than 10% for at least one of the words
+Say,decir (to say),Excluded,Less than 10% for at least one of the words
+Skate,patinar,Excluded,Less than 10% for at least one of the words
+Stay,quedar(se) (to stay),Excluded,Less than 10% for at least one of the words
+Stop,parar(se) (to stop),Excluded,Less than 10% for at least one of the words
+Sweep,barrer (to sweep),Excluded,Less than 10% for at least one of the words
+Swim,nadar (to swim),Excluded,Less than 10% for at least one of the words
+Take,quitar(se) (to take (off or away)),Excluded,Less than 10% for at least one of the words
+Talk,platicar (to talk),Excluded,Less than 10% for at least one of the words
+Wait,esperar,Excluded,Less than 10% for at least one of the words
+Write,escribir (to write),Excluded,Less than 10% for at least one of the words
+Mad,enojado (angry),Excluded,Non-concrete
+Awake,despierto (awake),Excluded,Non-concrete
+Better,mejor (better),Excluded,Non-concrete
+Black,negro (black),Excluded,Non-concrete
+Blue,azul (blue),Excluded,Non-concrete
+Clean,limpio (clean),Excluded,Non-concrete
+Dark,oscuro (dark),Excluded,Non-concrete
+Dry,seco (dry),Excluded,Non-concrete
+Empty,vacío (empty),Excluded,Non-concrete
+First,primero (first),Excluded,Non-concrete
+Full,lleno (full),Excluded,Non-concrete
+Green,verde (green),Excluded,Non-concrete
+Hard,duro (hard),Excluded,Non-concrete
+Heavy,pesado (heavy),Excluded,Non-concrete
+High,alto (high),Excluded,Non-concrete
+Hurt,lastimar(se) (to get hurt),Excluded,Non-concrete
+Little,chico,Excluded,Non-concrete
+Long,largo (long),Excluded,Non-concrete
+Naughty,travieso (naughty),Excluded,Non-concrete
+Noisy,ruidoso (noisy),Excluded,Non-concrete
+Old,viejo (old),Excluded,Non-concrete
+Poor,pobre (poor),Excluded,Non-concrete
+Red,rojo (red),Excluded,Non-concrete
+Sad,triste (sad),Excluded,Non-concrete
+Scared,"miedo/susto (scared, fear)",Excluded,Non-concrete
+Sick,enfermo (sick),Excluded,Non-concrete
+Slow,lento (slow),Excluded,Non-concrete
+Soft,suave (soft),Excluded,Non-concrete
+Sticky,pegajoso (sticky),Excluded,Non-concrete
+White,blanco (white),Excluded,Non-concrete
+Yellow,amarillo (yellow),Excluded,Non-concrete
+Before,antes (before),Excluded,Non-concrete
+Later,al rato (in a bit),Excluded,Non-concrete
+Night,noche (night),Excluded,Non-concrete
+Now,ahora/ahorita (now),Excluded,Non-concrete
+Tomorrow,mañana (tomorrow),Excluded,Non-concrete
+Yesterday,ayer (yesterday),Excluded,Non-concrete
+Her,ella (her),Excluded,Non-concrete
+Him,él (him),Excluded,Non-concrete
+His,suyo (his),Excluded,Non-concrete
+it,le (it),Excluded,Non-concrete
+me,me (me),Excluded,Non-concrete
+my,mí (me),Excluded,Non-concrete
+their,suyos (his/hers plural),Excluded,Non-concrete
+these,éstos (these),Excluded,Non-concrete
+those,aquellos (those),Excluded,Non-concrete
+your,tuyo (yours),Excluded,Non-concrete
+When,cuándo (when),Excluded,Non-concrete
+Which,cuál (which),Excluded,Non-concrete
+Why,por qué (why),Excluded,Non-concrete
+Away,lejos (away),Excluded,Non-concrete
+Behind,"atrás (back, behind)",Excluded,Non-concrete
+But,pero (but),Excluded,Non-concrete
+For,para (for),Excluded,Non-concrete
+Inside/In,adentro (inside),Excluded,Non-concrete
+Of,de (of),Excluded,Non-concrete
+On,encima (on),Excluded,Non-concrete
+There,ahí (there),Excluded,Non-concrete
+Up,arriba (up),Excluded,Non-concrete
+With,con (with),Excluded,Non-concrete
+A,un (a),Excluded,Non-concrete
+Another,"otro/otro vez (another, again)",Excluded,Non-concrete
+Same,igual (same),Excluded,Non-concrete
+Some,unos (some),Excluded,Non-concrete
+Can,poder (to be able to),Excluded,Non-concrete
+And,y (and),Excluded,Non-concrete
