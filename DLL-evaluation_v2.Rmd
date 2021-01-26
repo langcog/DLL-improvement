@@ -50,8 +50,7 @@ ws_short_sp <- read_csv(here("DLL/spanish-ws-short.csv"))
 #(intersect(wg_short_sp$word, coefs$sp$definition)) # 102 - tambien not in wordbank
 # 102 - wordbank errors: comer(se), adios (accent not on i), ver(se) ?, vasos (why plural?)
 #setdiff(wg_short_sp$word, coefs$sp$definition)
-#length(intersect(ws_short_sp$word, coefs$sp$definition)) # 99
-#setdiff(ws_short_sp$word, coefs$sp$definition) # oir not in wordbank
+#length(intersect(ws_short_sp$word, coefs$sp$definition)) # 100
 ```
 
 
@@ -89,7 +88,9 @@ dll2long_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long F
 
 Now we need to match the DLL words to the wordbank items for which we have IRT parameters.
 
-```{r match-english-words, echo=F, message=F}
+### Matching DLL short Level 1
+
+```{r match-english-words, message=F}
 # use with EN WG short form (12-18 mos)
 #dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
 
@@ -127,14 +128,13 @@ dll1ENshort_num_matching = length(intersect(dll1short$english, coefs$en$definiti
 #length(intersect(dll1short$english, ws_short_enA$word)) # 36 of the WS
 ```
 
-```{r match-spanish-words, echo=F, message=F}
+```{r match-spanish-words, message=F}
 # use with SP WG short form (12-18 mos)
 #dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
 
 dll1short <- dll1short %>% # this is now 168 items...it has the WG short form included
   mutate(spanish = tolower(spanish)) %>%
   separate(col = spanish, into = c("spanish", NA), sep=" \\(") %>%
-  # Expected 2 pieces. Additional pieces discarded in 4 rows [63, 90, 91, 159].Expected 2 pieces. Missing pieces filled with `NA` in 14 rows [13, 22, 27, 30, 36, 52, 54, 64, 66, 80, 88, 89, 129, 144].
   mutate(spanish = case_when(spanish == 'mamá/mami' ~ 'mamá',
                              spanish == 'calcetines' ~ 'calcetín',
                              spanish == 'tomar baño / bañarse' ~ 'baño', # verb -> noun.. tomar(se) ?
@@ -158,7 +158,7 @@ dll1short <- dll1short %>% # this is now 168 items...it has the WG short form in
 
 dll1SPshort_num_matching = length(intersect(dll1short$spanish, coefs$sp$definition)) # was 59 on GK version
 # 158 / 168
-setdiff(dll1short$spanish, coefs$sp$definition)
+#setdiff(dll1short$spanish, coefs$sp$definition)
 # no match: tostada, alimentar, sonreír, algunos, también
 
 # are these items also on the short form CDIs?
@@ -166,11 +166,56 @@ setdiff(dll1short$spanish, coefs$sp$definition)
 #length(intersect(dll1short$spanish, ws_short_sp$word)) # 63 of the WS
 ```
 
-## Need to also match English and Spanish names to wordbank names for "long form supplements" 1 and 2, and short level 2
+### Matching DLL short Level 2
 
-```{r}
-#dll1extended <- read_csv(here("DLL/DLL-ES1-extended-ENSP.csv")) #72 items
+```{r dll2-short, message=F}
+# DLL short Level 2 English / Spanish
+dll2short <- dll2short_raw %>% mutate(english = tolower(english)) %>% filter(!is.na(english)) %>%
+  mutate(english = case_when(english == 'church (or word used in your family)' ~ 'church*',
+                             english == 'tv' ~ 'TV',
+                             english == 'to be' ~ 'be',
+                             english == 'to be, there is' ~ 'there', # DLL typo?
+                             english == 'mommy' ~ 'mommy*',
+                             english == 'in the morning' ~ 'morning',
+                             english == 'swing' ~ 'swing (object)', # or swing (action) ?
+                             english == 'dress' ~ 'dress (object)',
+                          TRUE ~ english))
+# not on CDI: snake, drum, rice, skirt, mustache, pot, matches, newspaper, bell, godmother, 
+# let's go (but "go"), know, turn on (but "on"), win
 
+#length(intersect(dll2short$english, coefs$en$definition)) # 162 / 177
+#setdiff(dll2short$english, coefs$en$definition) 
+
+dll2short <- dll2short %>% 
+  mutate(spanish = tolower(spanish)) %>%
+  separate(col = spanish, into = c("spanish", NA), sep=" \\(") %>%
+  mutate(spanish = case_when(spanish == 'zapatos' ~ 'zapato',
+                             spanish == 'adiós/bye bye' ~ 'adíos/byebye', # wordbank typo
+                             spanish == 'banco' ~ 'banco (outside)', # or banco (places)
+                             spanish == 'coca' ~ 'soda/refresco', # close enough?
+                             spanish == 'acabar/terminar' ~ 'acabar', # or terminar
+                             spanish == 'quiquiriqui' ~ 'quiquiriquí', # DLL missing accent
+                             #spanish == 'debajo' ~ 'abajo', # down vs. below...close enough?
+                             spanish == 'en la noche/esta noche' ~ 'en la noche',
+                             spanish == 'haber' ~ 'haber (hay)',
+                             spanish == 'ir de compras' ~ 'comprar', # close enough? or 'ir(se)'
+                             spanish == 'llevar' ~ 'llevar(se)',
+                             #spanish == 'no más' ~ 'más', # close enough? or 'no'..or 'no hay'
+                             spanish == 'puede' ~ 'poder', # infinitive--close enough?
+                             spanish == 'que' ~ 'que (connection word)',
+                             spanish == 'rapido' ~ 'rápido (descriptive)', # or rápido (quantifiers)
+                             TRUE ~ spanish))
+                             
+length(intersect(dll2short$spanish, coefs$sp$definition)) # 153 / 177
+sort(setdiff(dll2short$spanish, coefs$sp$definition) )
+
+#length(intersect(ws_short_enA$word, dll2short$english)) # 100
+#length(intersect(ws_short_enB$word, dll2short$english)) # ..
+```
+
+### Matching DLL long supplement Level 1
+
+```{r dll1-long, message=F}
 dll1long <- dll1long_raw %>% mutate(english = tolower(english)) %>%
   mutate(english = case_when(english == 'daddy (or word used in your family)' ~ 'daddy*',
                           english == 'toy' ~ 'toy (object)',
@@ -194,39 +239,39 @@ dll1long <- dll1long %>% mutate(spanish = tolower(spanish)) %>%
                              TRUE ~ spanish))
 
 dll1long_SP_num_matching = length(intersect(dll1long$spanish, coefs$sp$definition)) # 74 / 74 match
-
-# use with SP WS short form (18-30 mos)
-#dll2SPshort <- read_csv(here("DLL/DLL-ES2-short-Spanish.csv")) # 73 items
-#dll2SPshort_num_matching = length(intersect(dll2SPshort$word, coefs$sp$definition)) # 46 (now 54)
-#setdiff(dll2SPshort$word, coefs$sp$definition) 
-# no matches: juegos, el puré de manzana, coca, la galleta salada (tho galleta),
-#  mentón, bandeja, trapeador, ir de compras, perseguir, abrazar, pretender/fingir,
-#  rasgar, agitar, probar, chiquito, esta noche, al lado de, debajo, si (if)
-# puede ('may', but poder (infinitive),
-# escalera -> escaleras
-# pierna -> piernas
-# banco -> banco (outside)  (not "places")
-# acabar/terminar -> split to "acabar" and "terminar"
-# rápido -> rápido (descriptive)  ("fast": not (quantifiers))
-# un/una -> split "un" / "una"
-
-#setdiff(dll2SPshort$translation, coefs$en$definition)
-# games -> game
-# swing -> swing (object)
-# hi/hello -> split to "hi" and "hello"
-# at night -> "tonight" (wrong translation)
-
-# use with EN WS short form (A or B??)
-#dll2ENshort <- read_csv(here("DLL/DLL-ES2-short-English.csv")) # 79
-#dll2ENshort_num_matching = length(intersect(dll2ENshort$word, coefs$en$definition)) # 67
-#setdiff(dll2ENshort$word, coefs$en$definition) 
-# no wordbank match: snake, drum, mustache, matches, pot, bell, godmother,
-# let's go, know, turn off (tho "off" and "turn around"), win, in the morning (tho morning)
-
-# "rain" is on both short WS form A and DLL-2 EN short 
-#intersect(ws_short_enA$word, dll2ENshort$word)
-#intersect(ws_short_enB$word, dll2ENshort$word) # 16 on DLL + short WS B: moo, truck, bottle, ..
 ```
+
+### Matching DLL long supplement Level 2
+
+```{r dll2-long, message=F}
+dll2long <- dll2long_raw %>% mutate(english = tolower(english)) %>%
+  mutate(english = case_when(english == 'daddy (or name/word used in your family)' ~ 'daddy*',
+                          english == 'teddy bear' ~ 'teddybear',
+                          english == 'patty cake' ~ 'pattycake', # or swing (action) ?
+                          english == 'dress' ~ 'dress (object)',
+                          english == 'i' ~ 'I',
+                          english == 'penis (or word used in your family)' ~ 'penis*',
+                          english == 'water' ~ 'water (beverage)',
+                          english == 'orange' ~ 'orange (food)',
+                          english == 'clock/watch' ~ 'clock', # or watch (object)
+                          english == 'drink' ~ 'drink (action)',
+                          english == 'feet' ~ 'foot',
+                          english == 'picture (\"or photo\")' ~ 'picture',
+                          english == 'buttocks/bottom (or word used in your family)' ~ 'buttocks/bottom*',
+                          TRUE ~ english))
+
+dll2long <- dll2long %>% mutate(spanish = tolower(spanish)) %>%
+  separate(col = spanish, into = c("spanish", NA), sep=" \\(") %>%
+  mutate(spanish = case_when(spanish == 'pipi' ~ 'pipí',
+                          spanish == 'shh' ~ 'shhh',
+                          spanish == 'bolsa' ~ 'bolsa (clothing)', # or bolsa (household) ?
+                          spanish == 'qué' ~ 'qué (question_words)',
+                          TRUE ~ spanish))
+
+#length(intersect(dll2long$spanish, coefs$sp$definition)) 
+#setdiff(dll2long$spanish, coefs$sp$definition)
+```
+
 
 ```{r load-wordbank-data, echo=F, message=F}
 load(here("data/wordbank_eng_ws_wg_webcdi31-36mos.Rds"))
