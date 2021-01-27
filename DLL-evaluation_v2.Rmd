@@ -90,7 +90,7 @@ Now we need to match the DLL words to the wordbank items for which we have IRT p
 
 ### Matching DLL short Level 1
 
-```{r match-english-words, message=F}
+```{r match-english-words, message=F, warning=F}
 # use with EN WG short form (12-18 mos)
 #dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
 
@@ -128,7 +128,7 @@ dll1ENshort_num_matching = length(intersect(dll1short$english, coefs$en$definiti
 #length(intersect(dll1short$english, ws_short_enA$word)) # 36 of the WS
 ```
 
-```{r match-spanish-words, message=F}
+```{r match-spanish-words, message=F, warning=F}
 # use with SP WG short form (12-18 mos)
 #dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
 
@@ -168,7 +168,7 @@ dll1SPshort_num_matching = length(intersect(dll1short$spanish, coefs$sp$definiti
 
 ### Matching DLL short Level 2
 
-```{r dll2-short, message=F}
+```{r dll2-short, message=F, warning=F}
 # DLL short Level 2 English / Spanish
 dll2short <- dll2short_raw %>% mutate(english = tolower(english)) %>% filter(!is.na(english)) %>%
   mutate(english = case_when(english == 'church (or word used in your family)' ~ 'church*',
@@ -417,7 +417,7 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 
 Using Wordbank data from `r nrow(young_sp)` Spanish-speaking children aged 12-18 months, we test how well sumscores from the DLL-ES1 short Spanish form correlate with children's full CDI:WG production scores.
 
-As for English, the correlation of Spanish-speaking children's DLL scores and their full CDI:WG production scores is quite high ($r=`r round(dll1_sp_cor,2)`$), but as shown above, their DLL score overestimates the production score on the full CDI at smaller vocabulary sizes (dotted line has slope $=`r length(sp_dll_cols)` / `r 428`$).
+As for English, the correlation of Spanish-speaking children's DLL scores and their full CDI:WG production scores is quite high ($r=`r round(dll1_sp_cor,2)`$), but as shown above, their DLL score overestimates the production score on the full CDI at smaller vocabulary sizes (dotted line has slope $=`r length(sp_wg_short_dll_cols)` / `r 428`$).
 Do note that few children in this dataset have large productive vocabularies.
 
 
@@ -444,18 +444,7 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 
 ## Recommendations
 
-Overall, it seems that many of the items on the DLL are somewhat easier than average, and thus these forms tend to overestimate children's full CDI scores (indeed, for items on the DLL1 English short form, the average easiness is -0.89, while the mean easiness of items not on the DLL is -1.85).
-This is also true of the CDI:WG short English form: the average easiness is -0.19 and the average ease of items not on the WG short form is -1.98.
-The CDI:WS short English form (A) is less biased towards easy items: average easiness is -1.29 vs. -1.82 for items not on the short WS.
-The histograms below show the distribution of easiness parameters for English (left) and Spanish (right) CDI words. 
-Solid lines show the average ease of DLL items (DLL 1 = red, DLL 2 = orange), and dashed lines show the average of non-DLL items.
-
-Spanish DLL1 items have an average ease of -0.96, while other items on the full CDI have a mean ease of -2.02.
-The Spanish DLL2 shows the least bias: items on it have an average ease of -1.75, while other CDI items have a mean of -1.94.
-
-ToDo: change this analysis to look at DLL long forms? (We don't want to change the short forms..)
-
-```{r, echo=F, message=F, fig.width=8, fig.height=4}
+```{r dll-item-ease, echo=F}
 en_dll1_ease <- coefs$en %>% mutate(onDLL = 
                   ifelse(is.element(definition, dll1short$english), 1, 0)) %>%
   group_by(onDLL) %>% 
@@ -485,8 +474,22 @@ sp_dll2_ease <- coefs$sp %>% mutate(onDLL =
                   ifelse(is.element(definition, dll2short$spanish), 1, 0)) %>%
   group_by(onDLL) %>% 
   summarise(easiness=mean(d), n=n())
+```
 
 
+Overall, it seems that many of the items on the DLL are somewhat easier than average, and thus these forms tend to overestimate children's full CDI scores (indeed, for items on the DLL1 English short form, the average easiness is `r round(en_dll1_ease[2,]$easiness,2)`, while the mean easiness of items not on the DLL is `r round(en_dll1_ease[1,]$easiness,2)`).
+This is also true of the CDI:WG short English form: the average easiness is `r round(en_wg_short_ease[2,]$easiness,2)` and the average ease of items not on the WG short form is `r round(en_wg_short_ease[1,]$easiness,2)`.
+The CDI:WS short English form (A) is less biased towards easy items: average easiness is `r round(en_ws_short_ease[2,]$easiness,2)` vs. `r round(en_ws_short_ease[1,]$easiness,2)` for items not on the short WS.
+The histograms below show the distribution of easiness parameters for English (left) and Spanish (right) CDI words. 
+Solid lines show the average ease of DLL items (DLL 1 = red, DLL 2 = orange), and dashed lines show the average of non-DLL items.
+
+Spanish DLL1 items have an average ease of `r round(sp_dll1_ease[2,]$easiness,2)`, while other items on the full CDI have a mean ease of `r round(sp_dll1_ease[1,]$easiness,2)`.
+
+Spanish DLL2 shows the least bias: items on it have an average ease of `r round(sp_dll2_ease[2,]$easiness,2)`, while other CDI items have a mean of `r round(en_dll2_ease[1,]$easiness,2)`.
+English DLL2 items have an average ease of `r round(en_dll2_ease[2,]$easiness,2)`, while other items on the full CDI have a mean ease of `r round(en_dll2_ease[1,]$easiness,2)`.
+
+
+```{r, echo=F, message=F, fig.width=8, fig.height=4}
 p1 <- ggplot(coefs$en, aes(x=d)) + geom_histogram() + theme_bw() + 
   xlab("English Item Easiness") + 
   geom_vline(xintercept=en_dll1_ease$easiness, color="red", linetype=c("dashed","solid")) +
@@ -502,28 +505,25 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4,4), heights=3)
 
 We recommend bringing the overall mean estimated IRT difficulty of the words selected for the DLLs closer to the mean difficulty of the words on the rest of the CDI.
 
-To start, we examine IRT easiness parameters for the doublets on the existing DLL lists, looking for large itmes with large mismatch between their English and Spanish ease.
+To start, we examine IRT easiness parameters for the doublets on the existing DLL lists, looking for items with large mismatch between their English and Spanish ease.
 
 ## Do doublets have similar difficulties?
 
 We want to whether assess doublet items have similar difficulty (operationalized by their IRT parameters) in English and in Spanish. 
 For example, consider if "perro" was for some reason much more difficult than "dog", then you wouldn't want to include it because it wouldn't be a good item for estimating vocabulary overlap!
 
-I've entered the English translation-equivalent item for the Spanish DLL1 items.
-Below are shown the parameters for these items, (en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared).
-(_a1 columns show item discriminations (slopes), and sp_en_d_diff simply shows Spanish - English easiness)
-Clearly some of these items have quite different difficulty levels, e.g. *hat* is much easier than *sombrero* (and somewhat easier than *gorra*).
-We may want to pick a criterion for the maximum allowable discrepancy, and try to find items that are more equivalent.
+Below are shown the parameters for items from the DLL Level 1 long supplement: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and sp_en_d_diff simply shows difference in Spanish and English easiness parameter).
+Clearly some of these items have quite different difficulty levels in English and Spanish, and we should try to find items that are more equivalent.
 
 ```{r compare-doublet-difficulties-dll1, echo=F}
 # a1 = discrimination, d = difficulty, g = lower-bound, u = upper-bound
 
-pars_dll <- dll1SPshort %>% 
-  left_join(coefs$sp, by=c("word"="definition")) %>% 
-  select(-g, -u, -notes) %>% 
+pars_dll <- dll1long %>% 
+  left_join(coefs$sp, by=c("spanish"="definition")) %>% 
+  select(english, spanish, a1, d) %>% 
   rename(sp_a1 = a1, sp_d = d) %>% 
-  left_join(coefs$en, by=c("translation"="definition")) %>%
-  select(-g, -u) %>% 
+  left_join(coefs$en, by=c("english"="definition")) %>%
+  select(english, spanish, sp_a1, sp_d, a1, d) %>% 
   rename(en_a1 = a1, en_d = d)
 
 pars_dll <- pars_dll %>% 
@@ -533,21 +533,28 @@ pars_dll <- pars_dll %>%
   arrange(desc(d_diff_sq))
 knitr::kable(pars_dll, digits=2)
 
+#pars_dll <- pars_dll %>% filter(!is.element(english, wg_short_en$word),
+#                                !is.element(spanish, wg_short_sp$word))
+# that gets rid of all of them
+
 #pars_dll %>% ggplot(aes(x=en_d, y=sp_d)) +
 #  geom_point() + theme_minimal() # geom_text_repel() # but can only use 1lang..
+
+# mean(diff): Spanish = -.75,  English = -.25
+#colMeans(pars_dll[,c("sp_d","en_d")])
 ```
 
-### DLL Level 2
+### DLL Level 2 Long Supplement
 
 ```{r compare-doublet-difficulties-dll2, echo=F}
 # a1 = discrimination, d = difficulty, g = lower-bound, u = upper-bound
 
-pars_dll2 <- dll2SPshort %>% 
-  left_join(coefs$sp, by=c("word"="definition")) %>% 
-  select(-g, -u, -notes) %>% 
+pars_dll2 <- dll2long %>% 
+  left_join(coefs$sp, by=c("spanish"="definition")) %>% 
+  select(english, spanish, a1, d) %>% 
   rename(sp_a1 = a1, sp_d = d) %>% 
-  left_join(coefs$en, by=c("translation"="definition")) %>%
-  select(-g, -u) %>% 
+  left_join(coefs$en, by=c("english"="definition")) %>%
+  select(english, spanish, sp_a1, sp_d, a1, d) %>% 
   rename(en_a1 = a1, en_d = d)
 
 pars_dll2 <- pars_dll2 %>% 
@@ -556,37 +563,45 @@ pars_dll2 <- pars_dll2 %>%
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
 knitr::kable(pars_dll2, digits=2)
+
+# mean(diff): Spanish = -.72,  English = -.35
+#colMeans(pars_dll2[,c("sp_d","en_d")])
 ```
 
 ## Recommended Item Swaps
 
-We will use Wordbank's unilemmas to find translation-equivalent pairs that have smaller d_diff_sq values than current DLL items.
+We will use Wordbank's unilemmas to find translation-equivalent pairs that have smaller d_diff_sq values than current DLL extended items.
 We first get the English / Spanish unilemmas from wordbank (both WS and WG), and below simply show the Spanish vs. English easiness parameters.
 
 ```{r unilemmas, echo=F, message=F}
 # created in get_L1-L2_unilemmas.R
 load("data/English-Spanish-dict.Rdata")
 
+# should we filter out the words from the 
+
 # add unilemmas to DLL dfs
-dll1ENshort <- dll1ENshort %>% 
-  left_join(dict %>% select(english, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("word"="english")) %>% select(-notes) %>%
-  group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup() # just take item with minimal easiness difference
+dll1long <- dll1long %>% 
+  left_join(dict %>% select(english, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("english"="english")) %>% 
+  select(-`English Word Origin`, -`Spanish Word Origin`, -`Spanish Alternative Translations (experimenter or MCDI)`) %>%
+  group_by(english) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup() # just take item with minimal easiness difference
 
-dll2ENshort <- dll2ENshort %>% 
-  left_join(dict %>% select(english, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("word"="english")) %>% select(-notes) %>%
-  group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
+dll2long <- dll2long %>% 
+  left_join(dict %>% select(english, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("english"="english")) %>%
+  select(-`English Word Origin`, -`Spanish Word Origin`, -`Spanish Alternative Translations (experimenter or MCDI)`) %>%
+  group_by(english) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
 
-dll1SPshort <- dll1SPshort %>% 
-  left_join(dict %>% select(spanish, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("word"="spanish")) %>% select(-notes) %>%
-  group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
-
-dll2SPshort <- dll2SPshort %>% 
-  left_join(dict %>% select(spanish, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("word"="spanish")) %>% select(-notes) %>%
-  group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
+# do the same for short forms? DLL group doesn't want to, but maybe didn't understand..
+# dll1short <- dll1short %>% 
+#   left_join(dict %>% select(spanish, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("spanish"="spanish")) %>% select(-notes) %>%
+#   group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
+# 
+# dll2short <- dll2short %>% 
+#   left_join(dict %>% select(spanish, uni_lemma, d_diff_sq, en_d, sp_d, lexical_class), by=c("spanish"="spanish")) %>% select(-notes) %>%
+#   group_by(word) %>% arrange(d_diff_sq) %>% slice(1) %>% ungroup()
 
 dict %>% ggplot(aes(x=en_d, y=sp_d, color=lexical_class)) + 
   geom_abline(slope=1, intercept=0, linetype = "dashed") +
-  geom_point() + geom_smooth(method='lm') + theme_bw() +
+  geom_point(alpha=.7) + geom_smooth(method='lm') + theme_bw() +
   xlab("English word easiness") + ylab("Spanish word easiness")
 
 Nswaps = 15
@@ -625,7 +640,7 @@ propose_swap <- function(cur_list, dictn, k=5, match_lexical_class=T) {
 }
 
 # for each DLL list, propose a number of swaps
-improve_DLL_list <- function(cur_list, dict, Nswaps = 10, language="english") {
+improve_DLL_list <- function(cur_list, dict, Nswaps = 10) {
   unilingual_items <- subset(cur_list, is.na(uni_lemma))
   dict_novel <- subset(dict, !is.element(uni_lemma, cur_list$uni_lemma))
   cur_list <- na.omit(cur_list) 
@@ -646,9 +661,9 @@ improve_DLL_list <- function(cur_list, dict, Nswaps = 10, language="english") {
       # remove removed word from DLL
       cur_list = subset(cur_list, uni_lemma!=swap$remove$uni_lemma)
       swap$remove
-      swap$add$word = unlist(swap$add[,language])
+      #swap$add$word = unlist(swap$add[,language])
       tmp = swap$add %>%
-        select(word, uni_lemma, lexical_class, d_diff_sq, en_d, sp_d)
+        select(english, spanish, uni_lemma, lexical_class, d_diff_sq, en_d, sp_d)
       cur_list = rbind(cur_list, tmp)
      }
   }
@@ -661,136 +676,25 @@ improve_DLL_list <- function(cur_list, dict, Nswaps = 10, language="english") {
 
 ```
 
-## English Level 1 DLL
+## Level 1 DLL Long Supplement
 
 ```{r}
-new_dll1ENshort <- improve_DLL_list(dll1ENshort, dict, Nswaps=Nswaps, language="english")$new_list
-write.csv(new_dll1ENshort, file="DLL/new_DLL-ES1-short-English.csv")
+new_dll1long <- improve_DLL_list(dll1long, dict, Nswaps=Nswaps)$new_list
+write.csv(new_dll1long, file="DLL/new_DLL-ES1-long.csv")
 ```
 
-Even swapping only 10 items reduced the total SSE by more than 50%.
+Even swapping only 15 items reduced the total SSE by more than 50%.
 Although it was not optimized for, the average ease of the items also decreased for both languages, coming closer to the mean.
 We now do the same for the other DLL forms before determining whether the DLL overestimation has decreased.
 
-## English Level 2 DLL
+## Level 2 DLL Long Supplement
 
 ```{r}
-new_dll2ENshort <- improve_DLL_list(dll2ENshort, dict, Nswaps=Nswaps, language="english")$new_list
-write.csv(new_dll2ENshort, file="DLL/new_DLL-ES2-short-English.csv")
+new_dll2long <- improve_DLL_list(dll2long, dict, Nswaps=Nswaps)$new_list
+write.csv(new_dll2long, file="DLL/new_DLL-ES2-long.csv")
 ```
 
-## Spanish Level 1 DLL
-
-```{r}
-new_dll1SPshort <- improve_DLL_list(dll1SPshort %>% select(-translation), dict, Nswaps=Nswaps, language="spanish")$new_list
-write.csv(new_dll1SPshort, file="DLL/new_DLL-ES1-short-Spanish.csv")
-```
-
-Note especially that the average ease of English items on this list was originally quite high (-0.29 vs. Spanish's -0.78), but it is somewhat closer to the mean ease of the Spanish items after the substitutions.
-
-## Spanish Level 2 DLL
-
-```{r}
-new_dll2SPshort <- improve_DLL_list(dll2SPshort %>% select(-translation), dict, Nswaps=Nswaps, language="spanish")$new_list
-write.csv(new_dll2SPshort, file="DLL/new_DLL-ES2-short-Spanish.csv")
-```
-
-Much like the previous list, after substitutions the mean ease of the English items is closer to those of the Spanish items. 
-
-## Overestimation in new DLL lists
-
-
-```{r new-overestimation, echo=F, warning=F, message=F}
-
-plot_dll_vs_full_cdi <- function(dll, cdi_short, d_demo, d_mat, young=T, plot=F, max_voc) {
-  dll_cols = na.omit(match(dll$word, colnames(d_mat)))
-  cdi_short_cols = na.omit(match(cdi_short$word, colnames(d_mat)))
-  cdi_short_dll_cols = union(cdi_short_cols, dll_cols) # 163 items
-  d_demo$production = rowSums(d_mat, na.rm=T)
-  d_demo$DLLsum = rowSums(d_mat[,cdi_short_dll_cols], na.rm=T)
-  d_demo$CDIshort = rowSums(d_mat[,cdi_short_cols], na.rm=T)
-  
-  if(young) {
-    d_demo <- d_demo %>% filter(age>=12, age <= 18, production <= max_voc)
-  } else {
-    d_demo <- d_demo %>% filter(age >= 16)
-  }
-  
-  # extrapolate based on max_voc to full CDI score
-  d_demo$adjDLLsum = (d_demo$DLLsum * max_voc) / length(cdi_short_dll_cols)
-  d_demo$adjCDIshort = (d_demo$CDIshort * max_voc) / length(cdi_short_cols) 
-    
-  DLL_rel = psych::ICC(d_demo[,c("production","adjDLLsum")]) 
-  CDIshort_rel = psych::ICC(d_demo[,c("production","adjCDIshort")]) 
-
-  DLL_rmse <- d_demo %>% mutate(DLL_rmse = sqrt((production - adjDLLsum)^2),
-                    CDIshort_rmse = sqrt((production - adjCDIshort)^2)) %>% 
-    summarise(DLL_rmse = mean(DLL_rmse), CDIshort_rmse = mean(CDIshort_rmse))
-  
-  if(plot) {
-    p1 <- d_demo %>%
-      ggplot(aes(x=production, y=DLLsum, group=sex, color=sex)) + 
-      geom_point(alpha=.3) + theme_classic() + 
-      xlab("Full CDI Production Score") + ylab("CDI Short + DLL Score") + 
-      geom_abline(slope=length(cdi_short_dll_cols) / max_voc, intercept=0, linetype = 'dashed') +
-      geom_smooth()
-    
-    p2 <- d_demo %>%
-      ggplot(aes(x=production, y=CDIshort, group=sex, color=sex)) +
-      geom_point(alpha=.3) + theme_classic() +
-      xlab("Full CDI Production Score") + ylab("CDI Short Score") +
-      geom_abline(slope=length(cdi_short_cols) / max_voc, intercept=0, linetype = 'dashed') +
-      geom_smooth() + theme(legend.position = "none")
-    
-    grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
-  }
-  return(list(DLL_rel=DLL_rel, CDIshort_rel=CDIshort_rel, DLL_rmse=DLL_rmse))
-}
-
-report_new_dll <- function(dll_str, new_rel) {
-  row <- c(new_rel$DLL_rel$results$ICC[1], new_rel$CDIshort_rel$results$ICC[1], new_rel$DLL_rmse)
-  row <- c(dll_str, row)
-  names(row) = c("DLL", "DLL vs. full ICC1", "CDI short vs. full ICC1", "DLL vs. full RMSE", "CDI short vs. full RMSE")
-  return(data.frame(row))
-}
-```
-The new DLL1 English short form (left) certainly looks like it's overestimating less (compare to just the CDI:WG short form).
-We quantify the reliability (ICC1) and the overall root mean squared error (RMSE) of the new DLL form + CDI short form, just the CDI short form, and of the old DLL form.
-
-
-```{r, echo=F}
-new_dll1EN_rel <- plot_dll_vs_full_cdi(new_dll1ENshort, wg_short_en, d_demo_en, d_mat_en, young=T, plot=T, max_voc=395)
-new_dll2EN_rel <- plot_dll_vs_full_cdi(new_dll2ENshort, ws_short_enA, d_demo_en, d_mat_en, young=F, max_voc=680)
-new_dll1_SP_rel <- plot_dll_vs_full_cdi(new_dll1SPshort, wg_short_sp, d_demo_sp, d_mat_sp, young=T, max_voc=428)
-new_dll2_SP_rel <- plot_dll_vs_full_cdi(new_dll2SPshort, ws_short_sp, d_demo_sp, d_mat_sp, young=F, max_voc=680)
-
-# get old DLL reliability
-old_dll1EN_rel <- plot_dll_vs_full_cdi(dll1ENshort, wg_short_en, d_demo_en, d_mat_en, young=T, max_voc=395)
-old_dll2EN_rel <- plot_dll_vs_full_cdi(dll2ENshort, ws_short_enA, d_demo_en, d_mat_en, young=F, max_voc=680)
-old_dll1_SP_rel <- plot_dll_vs_full_cdi(dll1SPshort, wg_short_sp, d_demo_sp, d_mat_sp, young=T, max_voc=428)
-old_dll2_SP_rel <- plot_dll_vs_full_cdi(dll2SPshort, ws_short_sp, d_demo_sp, d_mat_sp, young=F, max_voc=680)
-
-# problem: a few missing items in each new_dll: 89 vs 95; 82 vs 85; 70 vs 79..
-# is that why we see slightly lower reliability / RMSE in the original DLLs?? 
-
-dll_rel_tab <- rbind(report_new_dll("Old DLL1 EN short", old_dll1EN_rel),
-                     report_new_dll("New DLL1 EN short", new_dll1EN_rel),
-                     report_new_dll("Old DLL2 EN short", old_dll2EN_rel),
-                     report_new_dll("New DLL2 EN short", new_dll2EN_rel), 
-                     report_new_dll("Old DLL1 SP short", old_dll1_SP_rel),
-                     report_new_dll("New DLL1 SP short", new_dll1_SP_rel),
-                     report_new_dll("Old DLL2 SP short", old_dll2_SP_rel),
-                     report_new_dll("New DLL2 SP short", new_dll2_SP_rel))
-```
-
-The table below shows that the reliability of the original (old) DLLs vs. the (new) DLL with swaps is the same for extrapolating to children's full CDI scores (column: DLL.vs..full.ICC1), and higher than the reliability of extrapolating full CDI scores from just the appropriate short CDI form (column: CDI.short.vs..full.ICC1).
-The RMSE of the new DLL forms vs. the old DLL forms improved in all cases except for the the DLL1 SP short form, which was marginally worse (new RMSE=12.60 vs. old RMSE=12.22).
-For all DLL forms (new and old), the RMSE is better than that achieved by extrapolating from the CDI short form (column: CDI.short.vs..full.RMSE).
-
-```{r, echo=F}
-knitr::kable(dll_rel_tab, digits=2)
-```
-
+Once again, the total SSE decreased significantly, and the average ease of the items in both languages went down, and got closer to each other.
 
 
 ## Summary
