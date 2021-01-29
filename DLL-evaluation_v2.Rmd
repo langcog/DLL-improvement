@@ -296,12 +296,12 @@ Wordbank and DLL also often disagree about plural, e.g. *escalera*, and *pierna*
 
 ## Does the DLL short form recover full form scores?
 
-### English DLL Level 1
+### English DLL Level 1: Production
 
 Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's  production scores from the full CDI (WG/WS).
 The left panel shows full CDI scores vs. the DLL-ES1 short + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
 
-```{r cdi-short-DLL1-vs-full-cdi-English, echo=F, message=F, fig.width=8, fig.height=4}
+```{r cdi-short-DLL1-vs-full-cdi-English-prod, echo=F, message=F, fig.width=8, fig.height=4}
 en_wg_short_cols = na.omit(match(wg_short_en$word, colnames(d_mat_en)))
 en_wg_short_dll_cols = na.omit(match(dll1short$english, colnames(d_mat_en))) # 160 items
 d_demo_en$production = rowSums(d_mat_en, na.rm=T)
@@ -332,8 +332,46 @@ grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 Overall, the correlation of children's CDI:WG short + DLL scores and their full CDI production scores is quite high ($r=`r round(dll_en_cor,2)`$), but as shown above, for small vocabulary sizes the DLL score overestimates full CDI:WG production scores, while for higher full CDI:WG scores the DLL underestimates vocab size (dotted line has slope $=`r length(en_wg_short_dll_cols)` / `r 395`$).
 However, the CDI:WG short form alone (right panel) shows a similar (and more extreme) overestimation for small vocabulary sizes.
 
+### English DLL Level 1: Comprehension
 
-### English DLL Level 2
+Now we do the same for comprehension (receptive vocabulary) using Wordbank's CDI:WG English data.
+
+```{r cdi-short-DLL1-vs-full-cdi-English-comp, echo=F, message=F, fig.width=8, fig.height=4}
+load(here("data/comp/wordbank_eng_wg_webcdi.Rds"))
+
+too_young <- which(d_demo$age < 12) # 378 children can't be producing any words yet
+
+d_demo_en_comp = d_demo[-too_young,] 
+d_mat_en_comp = d_mat_wg[-too_young,]
+
+en_wg_short_colsC = na.omit(match(wg_short_en$word, colnames(d_mat_en_comp)))
+en_wg_short_dll_colsC = na.omit(match(dll1short$english, colnames(d_mat_en_comp))) # 160 items
+d_demo_en_comp$comprehension = rowSums(d_mat_en_comp, na.rm=T)
+d_demo_en_comp$DLLsum = rowSums(d_mat_en_comp[,en_wg_short_dll_colsC], na.rm=T)
+d_demo_en_comp$WGshort = rowSums(d_mat_en_comp[,en_wg_short_colsC], na.rm=T)
+
+dll_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLLsum) 
+
+p1 <- d_demo_en_comp %>%
+  ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) + theme_classic() + 
+  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
+  geom_abline(slope=length(en_wg_short_dll_colsC) / 395, intercept=0, linetype = 'dashed') +
+  geom_smooth()
+
+p2 <- d_demo_en_comp %>%
+  ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
+  geom_point(alpha=.3) + theme_classic() + 
+  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
+  geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+  
+grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+```
+
+The correlation of children's CDI:WG short + DLL scores and their full CDI comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
+
+### English DLL Level 2 (Production)
 
 Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's full production scores from the CDI:WS.
 The left panel shows full CDI scores vs. the DLL-ES2 short + CDI:WS short form (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
@@ -420,6 +458,44 @@ Using Wordbank data from `r nrow(young_sp)` Spanish-speaking children aged 12-18
 As for English, the correlation of Spanish-speaking children's DLL scores and their full CDI:WG production scores is quite high ($r=`r round(dll1_sp_cor,2)`$), but as shown above, their DLL score overestimates the production score on the full CDI at smaller vocabulary sizes (dotted line has slope $=`r length(sp_wg_short_dll_cols)` / `r 428`$).
 Do note that few children in this dataset have large productive vocabularies.
 
+### Spanish DLL Level 1: Comprehension
+
+Now we do the same for comprehension (receptive vocabulary) using Wordbank's CDI:WG Spanish data.
+
+```{r cdi-short-DLL1-vs-full-cdi-Spanish-comp, echo=F, message=F, fig.width=8, fig.height=4}
+load(here("data/comp/wordbank_sp_wg_webcdi.Rds"))
+
+too_young <- which(d_demo$age < 12) # 242 children can't be producing any words yet...leave in for comp?
+
+d_demo_sp_comp = d_demo[-too_young,] 
+d_mat_sp_comp = d_mat_wg[-too_young,]
+
+sp_wg_short_colsC = na.omit(match(wg_short_sp$word, colnames(d_mat_sp_comp)))
+sp_wg_short_dll_colsC = na.omit(match(dll1short$spanish, colnames(d_mat_sp_comp))) # 160 items
+d_demo_sp_comp$comprehension = rowSums(d_mat_sp_comp, na.rm=T)
+d_demo_sp_comp$DLLsum = rowSums(d_mat_sp_comp[,sp_wg_short_dll_colsC], na.rm=T)
+d_demo_sp_comp$WGshort = rowSums(d_mat_sp_comp[,sp_wg_short_colsC], na.rm=T)
+
+dll_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLLsum) 
+
+p1 <- d_demo_sp_comp %>%
+  ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) + theme_classic() + 
+  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
+  geom_abline(slope=length(sp_wg_short_dll_colsC) / 428, intercept=0, linetype = 'dashed') +
+  geom_smooth()
+
+p2 <- d_demo_sp_comp %>%
+  ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
+  geom_point(alpha=.3) + theme_classic() + 
+  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
+  geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+  
+grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+```
+
+The correlation of children's CDI:WG short + DLL scores and their full CDI comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
 
 ### Spanish DLL Level 2
 
