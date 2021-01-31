@@ -588,10 +588,52 @@ To start, we examine IRT easiness parameters for the doublets on the existing DL
 We want to whether assess doublet items have similar difficulty (operationalized by their IRT parameters) in English and in Spanish. 
 For example, consider if "perro" was for some reason much more difficult than "dog", then you wouldn't want to include it because it wouldn't be a good item for estimating vocabulary overlap!
 
-Below are shown the parameters for items from the DLL Level 1 long supplement: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and sp_en_d_diff simply shows difference in Spanish and English easiness parameter).
-Clearly some of these items have quite different difficulty levels in English and Spanish, and we should try to find items that are more equivalent.
+Below are shown the parameters for items from the DLL Level 1 short form: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and sp_en_d_diff simply shows difference in Spanish and English easiness parameter).
 
-```{r compare-doublet-difficulties-dll1, echo=F}
+### DLL Level 1 Short Form
+
+For the short form, we merely want to identify items that have very different difficulty in English and Spanish, and recommend that researchers interested in estimating conceptual overlap in bilinguals not include these items in their calculations due to the bias.
+Below is shown the distribution of the squared difference in difficulty for doublets from the DLL Level 1 short form.
+
+```{r compare-doublet-difficulties-dll1-short, echo=F}
+# a1 = discrimination, d = difficulty, g = lower-bound, u = upper-bound
+
+pars_dll1short <- dll1short %>% 
+  left_join(coefs$sp, by=c("spanish"="definition")) %>% 
+  select(english, spanish, a1, d) %>% 
+  rename(sp_a1 = a1, sp_d = d) %>% 
+  left_join(coefs$en, by=c("english"="definition")) %>%
+  select(english, spanish, sp_a1, sp_d, a1, d) %>% 
+  rename(en_a1 = a1, en_d = d)
+
+pars_dll1short <- pars_dll1short %>% 
+  mutate(sp_en_d_diff = sp_d - en_d,
+         d_diff_sq = (sp_d - en_d)^2) %>% 
+  filter(!is.na(d_diff_sq)) %>%
+  arrange(desc(d_diff_sq))
+
+threshold = 7.17 # mean = 2.17, sd = 3.3... 2.17 + 1.5*3.3 = 7.17
+bad_dll1 <- subset(pars_dll1short, d_diff_sq >= threshold)
+
+hist(pars_dll1short$d_diff_sq, main="", xlab="(EN diff - SP diff)^2")
+abline(v=threshold,col="red")
+```
+
+The mean squared difference in difficulty of doublets on the DLL Level 1 short form is `r round(mean(pars_dll1short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll1short$d_diff_sq), 2)`), and as shown above this distribution is highly skewed: most doublets are fairly well-matched (median d_diff_sq=0.99), but a few items are extremely mismatched.
+We recommend that the `r nrow(bad_dll1)` items (shown below) with a squared difficulty difference of 7.17 (mean + 1.5 * SD) or more be excluded from calculations of conceptual overlap.
+
+```{r, echo=F}
+knitr::kable(bad_dll1, digits=2)
+```
+
+Now we examine the doublets on the long supplemental DLL forms, and make recommendations of mismatched items to swap out.
+
+### DLL Level 1 Long Supplement
+
+Below are shown the parameters for items from the DLL Level 1 long supplement.
+Clearly some of these items have quite different difficulty levels in English and Spanish, and we should try to find items that are more equivalent and swap them onto the long supplement.
+
+```{r compare-doublet-difficulties-dll1-long, echo=F}
 # a1 = discrimination, d = difficulty, g = lower-bound, u = upper-bound
 
 pars_dll <- dll1long %>% 
@@ -607,6 +649,7 @@ pars_dll <- pars_dll %>%
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
+
 knitr::kable(pars_dll, digits=2)
 
 #pars_dll <- pars_dll %>% filter(!is.element(english, wg_short_en$word),
@@ -638,6 +681,7 @@ pars_dll2 <- pars_dll2 %>%
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
+
 knitr::kable(pars_dll2, digits=2)
 
 # mean(diff): Spanish = -.72,  English = -.35
@@ -680,11 +724,13 @@ dict %>% ggplot(aes(x=en_d, y=sp_d, color=lexical_class)) +
   geom_point(alpha=.7) + geom_smooth(method='lm') + theme_bw() +
   xlab("English word easiness") + ylab("Spanish word easiness")
 
+dict <- dict %>% filter(!is.element(english, dll1short$english),
+                        !is.element(spanish, dll1short$spanish)) # was 380, now only 218
+
 Nswaps = 15
 ```
 
-Working with `r nrow(dict)` unilemmas that match both our English and Spanish IRT parameters.
-For each DLL list we will simply swap the N=`r Nswaps` items with the largest easiness difference for items with minimal easiness difference.
+Working with `r nrow(dict)` unilemmas that match both our English and Spanish IRT parameters and that are *not* already on the DLL short lists, for each DLL list we will simply swap the N=`r Nswaps` items with the largest easiness difference for items with minimal easiness difference.
 We also attempt to find replacement items of the same lexical class.
 We report the original DLL list's easiness SSE, as well as the improvement in (easiness SSE) after each swap is made.
 
