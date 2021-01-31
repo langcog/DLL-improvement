@@ -626,6 +626,37 @@ We recommend that the `r nrow(bad_dll1)` items (shown below) with a squared diff
 knitr::kable(bad_dll1, digits=2)
 ```
 
+### DLL Level 2 Short Form
+
+```{r compare-doublet-difficulties-dll2-short, echo=F}
+pars_dll2short <- dll2short %>% 
+  left_join(coefs$sp, by=c("spanish"="definition")) %>% 
+  select(english, spanish, a1, d) %>% 
+  rename(sp_a1 = a1, sp_d = d) %>% 
+  left_join(coefs$en, by=c("english"="definition")) %>%
+  select(english, spanish, sp_a1, sp_d, a1, d) %>% 
+  rename(en_a1 = a1, en_d = d)
+
+pars_dll2short <- pars_dll2short %>% 
+  mutate(sp_en_d_diff = sp_d - en_d,
+         d_diff_sq = (sp_d - en_d)^2) %>% 
+  filter(!is.na(d_diff_sq)) %>%
+  arrange(desc(d_diff_sq))
+
+threshold = 8.22 # M = 2.53, SD = 3.79  M + 1.5*SD = 8.22
+bad_dll2 <- subset(pars_dll2short, d_diff_sq >= threshold)
+
+hist(pars_dll2short$d_diff_sq, main="", xlab="(EN diff - SP diff)^2")
+abline(v=threshold,col="red")
+```
+
+The mean squared difference in difficulty of doublets on the DLL Level 2 short form is `r round(mean(pars_dll2short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll2short$d_diff_sq), 2)`), and once again while most doublets are fairly well-matched, several items are extremely mismatched.
+We recommend that the `r nrow(bad_dll2)` items (shown below) with a squared difficulty difference of 8.22 (mean + 1.5 * SD) or more be excluded from calculations of conceptual overlap.
+
+```{r, echo=F}
+knitr::kable(bad_dll2, digits=2)
+```
+
 Now we examine the doublets on the long supplemental DLL forms, and make recommendations of mismatched items to swap out.
 
 ### DLL Level 1 Long Supplement
