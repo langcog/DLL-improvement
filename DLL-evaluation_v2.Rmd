@@ -756,9 +756,11 @@ dict %>% ggplot(aes(x=en_d, y=sp_d, color=lexical_class)) +
   xlab("English word easiness") + ylab("Spanish word easiness")
 
 dict <- dict %>% filter(!is.element(english, dll1short$english),
-                        !is.element(spanish, dll1short$spanish)) # was 380, now only 218
+                        !is.element(spanish, dll1short$spanish), # was 380, now only 218
+                        !is.element(english, dll2short$english),
+                        !is.element(spanish, dll2short$spanish)) # 183 
 
-Nswaps = 15
+Nswaps = 25
 ```
 
 Working with `r nrow(dict)` unilemmas that match both our English and Spanish IRT parameters and that are *not* already on the DLL short lists, for each DLL list we will simply swap the N=`r Nswaps` items with the largest easiness difference for items with minimal easiness difference.
@@ -836,7 +838,7 @@ new_dll1long <- improve_DLL_list(dll1long, dict, Nswaps=Nswaps)$new_list
 write.csv(new_dll1long, file="DLL/new_DLL-ES1-long.csv")
 ```
 
-Even swapping only 15 items reduced the total SSE by more than 50%.
+Even swapping only 25 items reduced the total SSE by more than 50%.
 Although it was not optimized for, the average ease of the items also decreased for both languages, coming closer to the mean.
 We now do the same for the other DLL forms before determining whether the DLL overestimation has decreased.
 
