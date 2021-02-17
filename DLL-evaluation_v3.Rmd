@@ -311,7 +311,10 @@ d_demo_en$WGshort = rowSums(d_mat_en[,en_wg_short_cols], na.rm=T)
 
 young_en = d_demo_en %>% filter(age <= 18, production < 396) # want only WG kids
 
-dll_en_cor = cor(young_en$production, young_en$DLLsum) 
+dll_en_cor = cor(young_en$production, young_en$DLLsum) # .977
+wg_en_cor = cor(young_en$production, young_en$WGshort) # .963
+
+# create SSE for linear extrapolation from DLL / short to full CDI:WG?
 
 p1 <- young_en %>%
   ggplot(aes(x=production, y=DLLsum, group=sex, color=sex)) + 
@@ -351,7 +354,8 @@ d_demo_en_comp$comprehension = rowSums(d_mat_en_comp, na.rm=T)
 d_demo_en_comp$DLLsum = rowSums(d_mat_en_comp[,en_wg_short_dll_colsC], na.rm=T)
 d_demo_en_comp$WGshort = rowSums(d_mat_en_comp[,en_wg_short_colsC], na.rm=T)
 
-dll_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLLsum) 
+dll_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLLsum) # .982
+wg_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$WGshort) # .959
 
 p1 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
@@ -386,7 +390,8 @@ d_demo_en$WSshort = rowSums(d_mat_en[,en_ws_short_cols], na.rm=T)
 
 old_en = d_demo_en %>% filter(age > 15, age < 31)
 
-dll2_en_cor = cor(old_en$production, old_en$DLLsum) 
+dll2_en_cor = cor(old_en$production, old_en$DLL2sum) # .992
+ws_en_cor = cor(old_en$production, old_en$WSshort) # .989
 
 
 p1 <- old_en %>% 
@@ -435,9 +440,11 @@ d_demo_sp$WSshort = rowSums(d_mat_sp[,sp_ws_short_cols], na.rm=T)
 young_sp <- d_demo_sp %>% filter(age<19, production<=428)
 old_sp <- d_demo_sp %>% filter(age>15)
 
-dll1_sp_cor = cor(young_sp$production, young_sp$DLL1sum) 
-dll2_sp_cor = cor(old_sp$production, old_sp$DLL2sum) 
-
+dll1_sp_cor = cor(young_sp$production, young_sp$DLL1sum) # .988
+dll2_sp_cor = cor(old_sp$production, old_sp$DLL2sum) # .989
+wg_sp_cor = cor(young_sp$production, young_sp$WGshort) # .983
+ws_sp_cor = cor(old_sp$production, old_sp$WSshort) # .983
+  
 p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) + theme_classic() + 
   xlab("Full CDI Production Score") + ylab("DLL1 Score") + 
@@ -477,7 +484,8 @@ d_demo_sp_comp$comprehension = rowSums(d_mat_sp_comp, na.rm=T)
 d_demo_sp_comp$DLLsum = rowSums(d_mat_sp_comp[,sp_wg_short_dll_colsC], na.rm=T)
 d_demo_sp_comp$WGshort = rowSums(d_mat_sp_comp[,sp_wg_short_colsC], na.rm=T)
 
-dll_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLLsum) 
+dll_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLLsum) # .982
+wg_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$WGshort) # .974
 
 p1 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
@@ -589,7 +597,7 @@ To start, we examine IRT easiness parameters for the doublets on the existing DL
 We want to whether assess doublet items have similar difficulty (operationalized by their IRT parameters) in English and in Spanish. 
 For example, consider if "perro" was for some reason much more difficult than "dog", then you wouldn't want to include it because it wouldn't be a good item for estimating vocabulary overlap!
 
-Below are shown the parameters for items from the DLL Level 1 short form: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and sp_en_d_diff simply shows difference in Spanish and English easiness parameter).
+Below are shown the parameters for items from the DLL Level 1 short form: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and en_sp_d_diff simply shows the difference (English - Spanish) in the easiness parameter).
 
 ### DLL Level 1 Short Form
 
@@ -608,7 +616,7 @@ pars_dll1short <- dll1short %>%
   rename(en_a1 = a1, en_d = d)
 
 pars_dll1short <- pars_dll1short %>% 
-  mutate(sp_en_d_diff = sp_d - en_d,
+  mutate(en_sp_d_diff = en_d - sp_d,
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
@@ -639,7 +647,7 @@ pars_dll2short <- dll2short %>%
   rename(en_a1 = a1, en_d = d)
 
 pars_dll2short <- pars_dll2short %>% 
-  mutate(sp_en_d_diff = sp_d - en_d,
+  mutate(en_sp_d_diff = en_d - sp_d,
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
@@ -677,7 +685,7 @@ pars_dll <- dll1long %>%
   rename(en_a1 = a1, en_d = d)
 
 pars_dll <- pars_dll %>% 
-  mutate(sp_en_d_diff = sp_d - en_d,
+  mutate(en_sp_d_diff = en_d - sp_d,
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
@@ -709,7 +717,7 @@ pars_dll2 <- dll2long %>%
   rename(en_a1 = a1, en_d = d)
 
 pars_dll2 <- pars_dll2 %>% 
-  mutate(sp_en_d_diff = sp_d - en_d,
+  mutate(en_sp_d_diff = en_d - sp_d,
          d_diff_sq = (sp_d - en_d)^2) %>% 
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
@@ -765,10 +773,82 @@ Items with small difficulty mismatch (d_diff_sq) can be chosen from this list to
 The median d_diff_sq on the DLL-ES Level 1 supplement is `r round(median(dll1long$d_diff_sq, na.rm=T),3)` (sd=`r round(sd(dll1long$d_diff_sq, na.rm=T),3)`).
 The median d_diff_sq on the DLL-ES Level 2 supplement is `r round(median(dll2long$d_diff_sq, na.rm=T),3)` (sd=`r round(sd(dll2long$d_diff_sq, na.rm=T),3)`).
 
-Once the swaps are hand-picked, we will report the original DLL list's easiness SSE, as well as the improvement in (easiness SSE) after the final swaps are made.
+Finally, for the hand-picked swaps we will report the original DLL list's easiness SSE, as well as the improvement in (easiness SSE) after the final swaps are made.
 
 ```{r}
 dict %>% arrange(d_diff_sq) %>% select(-uni_lemma) %>%
   kable(., digits=3)
 ```
 
+## DLL-ES Level 1 Long Supplement Swaps
+
+```{r, echo=F}
+# need the full dict 
+load("data/English-Spanish-dict.Rdata")
+
+orig_l1_dds = dll1long %>% 
+  mutate(en_sp_d_diff = en_d - sp_d) %>%
+  filter(!is.na(d_diff_sq)) %>%
+  summarise(mean_diff_sq = mean(d_diff_sq), mean_diff = mean(en_sp_d_diff))
+# original list mean d_diff_sq per item = 1.26 (and SP-EN diff = -.515, so EN is easier)
+
+l1_removed <- c("stop", "apple", "shirt", "picture", "give",
+                "cheese", "moo", "swing (object)", "ear", "crib",
+                "tree", "bite", "quack quack", "go", "baa baa")
+l1_added <- c("hurry", "animal", "coffee", "scissors", "show",
+              "orange (food)", "brother", "elephant", "day", "food",
+              "tummy", "run", "sister", "draw", "school")
+
+# setdiff(l1_removed, dict$english) # shirt
+
+new_dll1long <- dict %>% filter(is.element(english, dll1long$english)) %>% # 71/74 in dict
+  filter(!is.element(english, l1_removed)) %>% # 57
+  bind_rows(dict %>% filter(is.element(english, l1_added))) # 73
+
+new_l1_dds = new_dll1long %>% 
+  filter(!is.na(d_diff_sq)) %>%
+  mutate(en_sp_d_diff = en_d - sp_d) %>%
+  summarise(mean_diff_sq = mean(d_diff_sq), mean_diff = mean(en_sp_d_diff))
+# now .535 and SP-EN diff = -.187
+ratio_l1_improv = orig_l1_dds / new_l1_dds
+```
+
+The average discrepancy on the original Level 1 supplement was `r round(orig_l1_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l1_dds[2],2)`).
+After substituting 15 of the items with the largest discrepancy, the average discrepancy was `r round(new_l1_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l1_dds[2],2)`).
+
+## DLL-ES Level 2 Long Supplement Swaps
+
+Now we evaluate the swaps for the Level 2 long supplement.
+
+```{r, echo=F}
+orig_l2_dds = dll2long %>% 
+  mutate(en_sp_d_diff = en_d - sp_d) %>%
+  filter(!is.na(d_diff_sq)) %>%
+  summarise(mean_diff_sq = mean(d_diff_sq), mean_diff = mean(en_sp_d_diff))
+            #med_diff_sq = median(d_diff_sq))
+# original list mean d_diff_sq per item = 1.31, and EN-SP diff = -.31
+
+l2_removed <- c("nose", "table", "bee", "cup", "picture", "cheese", "soup",
+                "knee", "apple", "blanket", "bubbles", "cereal", "soda/pop", 
+                "quack quack", "go")
+l2_added <- c("food", "closet", "animal", "donkey", "elephant", "wolf", "toy (object)", 
+              "pajamas", "shorts", "vagina*", "drawer", "scissors", "brother",
+              "sister", "hurry")
+
+# setdiff(l2_removed, dict$english) # bubbles
+# setdiff(l2_added, dict$english)
+
+new_dll2long <- dict %>% filter(is.element(english, dll2long$english)) %>% # 116/131 in dict
+  filter(!is.element(english, l2_removed)) %>% # 102 - 1.01 and -.25 after removal..
+  bind_rows(dict %>% filter(is.element(english, l2_added))) # 117
+
+new_l2_dds = new_dll2long %>% 
+  filter(!is.na(d_diff_sq)) %>%
+  mutate(en_sp_d_diff = en_d - sp_d) %>%
+  summarise(mean_diff_sq = mean(d_diff_sq), mean_diff = mean(en_sp_d_diff))
+# now .961 and SP-EN diff = -.211
+ratio_l2_improv = orig_l2_dds / new_l2_dds
+```
+
+The average discrepancy on the original Level 2 supplement was `r round(orig_l2_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l2_dds[2],2)`).
+After substituting 15 of the items with the largest discrepancy, the average discrepancy was `r round(new_l2_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l2_dds[2],2)`).

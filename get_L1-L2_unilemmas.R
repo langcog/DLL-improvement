@@ -11,15 +11,23 @@ en_items <- en_wg %>% filter(!is.na(uni_lemma)) %>%
   bind_rows(en_ws %>% filter(!is.na(uni_lemma))) %>%
   select(-language, -form, -type, -complexity_category) %>%
   rename(english = definition) %>%
-  distinct(english, category, lexical_class, uni_lemma) # item_id, num_item_id)
-
+  distinct(english, category, lexical_class, uni_lemma) %>% # item_id, num_item_id)
+  mutate(uni_lemma = case_when(
+    uni_lemma == "t-shirt" ~ "shirt",
+    TRUE ~ uni_lemma
+  ))
+  
 sp_items <- sp_wg %>% filter(!is.na(uni_lemma)) %>%
   bind_rows(sp_ws %>% filter(!is.na(uni_lemma))) %>%
   select(-language, -form, -type, -complexity_category, -category, -lexical_class) %>%
   rename(spanish=definition) %>%
-  distinct(spanish, uni_lemma) # item_id, num_item_id)
-
-dict <- en_items %>% left_join(sp_items, by="uni_lemma") %>% # 743, but only 413 in both
+  distinct(spanish, uni_lemma) %>% # item_id, num_item_id)
+  mutate(uni_lemma = case_when(
+    uni_lemma == "t-shirt" ~ "shirt",
+    TRUE ~ uni_lemma
+  ))
+  
+dict <- en_items %>% left_join(sp_items, by="uni_lemma") %>% # 743, but only 414 in both
   filter(!is.na(spanish), !is.na(english)) 
 
 
@@ -40,7 +48,7 @@ dict <- dict %>%
   rename(en_d = d) %>% 
   left_join(coefs$sp %>% select(d, definition), by=c("spanish"="definition")) %>%
   rename(sp_d = d) %>% 
-  mutate(sp_en_d_diff = sp_d - en_d,
+  mutate(en_sp_d_diff = en_d - sp_d,
          d_diff_sq = (sp_d - en_d)^2)
 
 # can we match more of these?
