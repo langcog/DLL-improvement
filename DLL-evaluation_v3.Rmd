@@ -17,8 +17,9 @@ require(mirt)
 require(tidyverse)
 require(gridExtra)
 require(kableExtra)
+require(ggpubr)
 
-# use combined WS+WG data, or just WS?
+
 load(here("data/eng_ws_wg_mod_2pl.Rds"))
 coefs = list(en = coefs_2pl)
 fscores = list(en = fscores_2pl)
@@ -328,7 +329,8 @@ p2 <- young_en %>%
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
   
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+#grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+ggarrange(p1, p2, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_prod.pdf", g)
 ```
@@ -371,7 +373,8 @@ p2 <- d_demo_en_comp %>%
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
   
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+#grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+ggarrange(p1, p2, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
 ```
@@ -383,12 +386,18 @@ The correlation of children's CDI:WG short + DLL scores and their full CDI compr
 Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's full production scores from the CDI:WS.
 The left panel shows full CDI scores vs. the DLL-ES2 short + CDI:WS short form (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
 
-```{r cdi-short-DLL2-vs-full-cdi-English, echo=F, message=F, fig.width=8, fig.height=4}
+```{r cdi-short-DLL2-vs-full-cdi-English, echo=F, message=F, fig.width=10, fig.height=4}
 en_ws_short_cols = na.omit(match(ws_short_enA$word, colnames(d_mat_en))) # 
 en_ws_short_dll_cols = na.omit(match(dll2short$english, colnames(d_mat_en))) # 162 items
 d_demo_en$production = rowSums(d_mat_en, na.rm=T)
 d_demo_en$DLL2sum = rowSums(d_mat_en[,en_ws_short_dll_cols], na.rm=T)
 d_demo_en$WSshort = rowSums(d_mat_en[,en_ws_short_cols], na.rm=T)
+
+# ToDo: plot this
+en_ws_dll_long_cols = union(en_ws_short_dll_cols, na.omit(match(dll2long$english, colnames(d_mat_en)))) # 293
+
+d_demo_en$DLL2long_sum = rowSums(d_mat_en[,en_ws_dll_long_cols], na.rm=T)
+
 
 old_en = d_demo_en %>% filter(age > 15, age < 31)
 
@@ -410,7 +419,15 @@ p2 <- old_en %>%
   geom_abline(slope=length(en_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
 
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+p3 <- old_en %>% 
+  ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.1) +  
+  xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
+  geom_abline(slope=length(en_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
+#grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL2short_vs_CDIWS_EN.pdf", g)
 ```
@@ -441,6 +458,10 @@ d_demo_sp$DLL2sum = rowSums(d_mat_sp[,sp_ws_short_dll_cols], na.rm=T)
 d_demo_sp$WGshort = rowSums(d_mat_sp[,sp_wg_short_cols], na.rm=T)
 d_demo_sp$WSshort = rowSums(d_mat_sp[,sp_ws_short_cols], na.rm=T)
 
+sp_ws_dll_long_cols = union(sp_ws_short_dll_cols, na.omit(match(dll2long$spanish, colnames(d_mat_sp))))
+
+d_demo_sp$DLL2long_sum = rowSums(d_mat_sp[,sp_ws_dll_long_cols], na.rm=T)
+
 young_sp <- d_demo_sp %>% filter(age<19, production<=428)
 old_sp <- d_demo_sp %>% filter(age>15)
 
@@ -461,7 +482,8 @@ p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) +
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
 
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+#grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+ggarrange(p1, p2, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_prod_SP.pdf", g)
 ```
@@ -476,7 +498,7 @@ Do note that few children in this dataset have large productive vocabularies.
 
 Now we do the same for comprehension (receptive vocabulary) using Wordbank's CDI:WG Spanish data.
 
-```{r cdi-short-DLL1-vs-full-cdi-Spanish-comp, echo=F, message=F, fig.width=8, fig.height=4}
+```{r cdi-short-DLL1-vs-full-cdi-Spanish-comp, echo=F, message=F, fig.width=10, fig.height=4}
 load(here("data/comp/wordbank_sp_wg_webcdi.Rds"))
 
 too_young <- which(d_demo$age < 12) # 242 children can't be producing any words yet...leave in for comp?
@@ -489,6 +511,7 @@ sp_wg_short_dll_colsC = na.omit(match(dll1short$spanish, colnames(d_mat_sp_comp)
 d_demo_sp_comp$comprehension = rowSums(d_mat_sp_comp, na.rm=T)
 d_demo_sp_comp$DLLsum = rowSums(d_mat_sp_comp[,sp_wg_short_dll_colsC], na.rm=T)
 d_demo_sp_comp$WGshort = rowSums(d_mat_sp_comp[,sp_wg_short_colsC], na.rm=T)
+
 
 dll_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLLsum) # .982
 wg_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$WGshort) # .974
@@ -507,7 +530,8 @@ p2 <- d_demo_sp_comp %>%
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
   
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+#grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+ggarrange(p1, p2, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
 ```
@@ -516,7 +540,7 @@ The correlation of children's CDI:WG short + DLL scores and their full CDI compr
 
 ### Spanish DLL Level 2
 
-```{r spanish-dll2, echo=F, message=F, fig.width=8, fig.height=4}
+```{r spanish-dll2, echo=F, message=F, fig.width=10, fig.height=4}
 
 p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
@@ -530,7 +554,14 @@ p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) +
   geom_abline(slope=length(sp_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
 
-grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
+p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) +  
+  xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
+  geom_abline(slope=length(sp_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
+#grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9,3.9), heights=3.5)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL2short_vs_CDIWS_SP.pdf", g)
 ```
@@ -628,7 +659,7 @@ pars_dll1short <- dll1short %>%
 
 pars_dll1short <- pars_dll1short %>% 
   mutate(en_sp_d_diff = en_d - sp_d,
-         d_diff_sq = (sp_d - en_d)^2) %>% 
+         d_diff_sq = (sp_d - en_d)^2) %>% # want to also maximize discrimination..
   filter(!is.na(d_diff_sq)) %>%
   arrange(desc(d_diff_sq))
 
