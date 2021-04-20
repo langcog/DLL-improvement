@@ -566,6 +566,22 @@ ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #ggsave("DLL2short_vs_CDIWS_SP.pdf", g)
 ```
 
+## Full CDI vs. Short CDI / DLL Correlations
+
+```{r, echo=F}
+cortab <- data.frame(Language = c(rep("English", 3), rep("Spanish", 3)),
+                "Full Form Score" = rep(c("CDI:WG production", "CDI:WG comprehension", "CDI:WS production"), 2),
+                N = c(nrow(young_en), nrow(young_en), nrow(old_en), 
+                      nrow(young_sp), nrow(young_sp), nrow(old_sp)),
+                "r with CDI short form" = c(wg_en_cor, wg_en_cor_comp, ws_en_cor,
+                                            wg_sp_cor, wg_sp_cor_comp, ws_sp_cor),
+                "r with DLL-ES short inventory" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
+                                                    dll1_sp_cor, dll_sp_cor_comp, dll2_sp_cor))
+
+cortab %>% kable(., digits=3, table.attr = "style='width:30%;'") %>% 
+  kable_classic(full_width = T, position = "center")
+```
+
 
 ## Recommendations
 
@@ -610,7 +626,8 @@ Solid lines show the average ease of DLL items (DLL 1 = red, DLL 2 = orange), an
 
 Spanish DLL1 items have an average ease of `r round(sp_dll1_ease[2,]$easiness,2)`, while other items on the full CDI have a mean ease of `r round(sp_dll1_ease[1,]$easiness,2)`.
 
-Spanish DLL2 shows the least bias: items on it have an average ease of `r round(sp_dll2_ease[2,]$easiness,2)`, while other CDI items have a mean of `r round(en_dll2_ease[1,]$easiness,2)`.
+Spanish DLL2 items have an average ease of `r round(sp_dll2_ease[2,]$easiness,2)`, while other CDI items have a mean of `r round(en_dll2_ease[1,]$easiness,2)`.
+
 English DLL2 items have an average ease of `r round(en_dll2_ease[2,]$easiness,2)`, while other items on the full CDI have a mean ease of `r round(en_dll2_ease[1,]$easiness,2)`.
 
 
@@ -799,13 +816,22 @@ dict %>% ggplot(aes(x=en_d, y=sp_d, color=lexical_class)) +
   geom_point(alpha=.7) + geom_smooth(method='lm') + 
   xlab("English word easiness") + ylab("Spanish word easiness")
 
+# original
+#dict_ <- dict %>% filter(!is.element(english, dll1short$english),
+#                        !is.element(spanish, dll1short$spanish), # was 380, now only 218
+#                        !is.element(english, dll2short$english),
+#                        !is.element(spanish, dll2short$spanish),
+#                        !is.element(english, dll1long$english),
+#                        !is.element(spanish, dll2long$spanish)) # 183 
+
+
+# only DLL2 that are excluded
 dict <- dict %>% filter(!is.element(english, dll1short$english),
                         !is.element(spanish, dll1short$spanish), # was 380, now only 218
                         !is.element(english, dll2short$english),
                         !is.element(spanish, dll2short$spanish),
                         !is.element(english, dll1long$english),
                         !is.element(spanish, dll2long$spanish)) # 183 
-
 ```
 
 
@@ -816,7 +842,7 @@ Items with small difficulty mismatch (d_diff_sq) can be chosen from this list to
 The median d_diff_sq on the DLL-ES Level 1 supplement is `r round(median(dll1long$d_diff_sq, na.rm=T),3)` (sd=`r round(sd(dll1long$d_diff_sq, na.rm=T),3)`).
 The median d_diff_sq on the DLL-ES Level 2 supplement is `r round(median(dll2long$d_diff_sq, na.rm=T),3)` (sd=`r round(sd(dll2long$d_diff_sq, na.rm=T),3)`).
 
-Finally, for the hand-picked swaps we will report the original DLL list's easiness SSE, as well as the improvement in (easiness SSE) after the final swaps are made.
+Finally, for the hand-picked swaps we will report the original DLL list's easiness SSE, as well as the improvement (in easiness SSE) after the final swaps are made.
 
 ```{r, echo=F}
 dict %>% arrange(d_diff_sq) %>% select(-uni_lemma) %>%
@@ -836,14 +862,16 @@ orig_l1_dds = dll1long %>%
   summarise(mean_diff_sq = mean(d_diff_sq), mean_diff = mean(en_sp_d_diff))
 # original list mean d_diff_sq per item = 1.26 (and SP-EN diff = -.515, so EN is easier)
 
-l1_removed <- c("stop", "apple", "shirt", "picture", "give",
-                "cheese", "moo", "swing (object)", "ear", "crib",
-                "tree", "bite", "quack quack", "go", "baa baa")
-l1_added <- c("hurry", "animal", "coffee", "scissors", "show",
-              "orange (food)", "brother", "elephant", "day", "food",
-              "tummy", "run", "sister", "draw", "school")
 
-# setdiff(l1_removed, dict$english) # shirt
+l1_removed <- c("give","ear","cheese","crib","banana","shirt","chicken (food)",
+                "moo","nap","apple","stop","drawer","face","swing (object)","belly button")
+
+l1_added <- c("draw", "elephant", "animal", "scissors", "brother", "sister", "toothbrush",
+              "hammer", "hurry", "squirrel", "show", "firetruck", "boots", "penguin",
+              "turtle")
+
+# setdiff(l1_removed, dict$english) # nap
+# setdiff(l1_added, dict$english) # firetruck
 
 new_dll1long <- dict %>% filter(is.element(english, dll1long$english)) %>% # 71/74 in dict
   filter(!is.element(english, l1_removed)) %>% # 57
@@ -872,14 +900,16 @@ orig_l2_dds = dll2long %>%
             #med_diff_sq = median(d_diff_sq))
 # original list mean d_diff_sq per item = 1.31, and EN-SP diff = -.31
 
-l2_removed <- c("nose", "table", "bee", "cup", "picture", "cheese", "soup",
-                "knee", "apple", "blanket", "bubbles", "cereal", "soda/pop", 
-                "quack quack", "go")
-l2_added <- c("food", "closet", "animal", "donkey", "elephant", "wolf", "toy (object)", 
-              "pajamas", "shorts", "vagina*", "drawer", "scissors", "brother",
-              "sister", "hurry")
 
-# setdiff(l2_removed, dict$english) # bubbles
+l2_removed <- c("bubbles", "water (beverage)", "soup", "bread", "table", "coat",
+                "pencil", "bee", "chocolate", "cheese", "crib", "motorcycle",
+                "girl", "soda/pop", "chicken (food)")
+
+l2_added <- c("elephant", "animal", "scissors", "helicopter", "brother",
+              "sister", "vagina*", "toothbrush", "hammer", "closet", "shower",
+              "squirrel", "firetruck", "woof woof", "penguin")
+
+# setdiff(l2_removed, dict$english) # bubbles coat pencil chocolate
 # setdiff(l2_added, dict$english)
 
 new_dll2long <- dict %>% filter(is.element(english, dll2long$english)) %>% # 116/131 in dict
@@ -896,3 +926,45 @@ ratio_l2_improv = orig_l2_dds / new_l2_dds
 
 The average discrepancy on the original Level 2 supplement was `r round(orig_l2_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l2_dds[2],2)`).
 After substituting 15 of the items with the largest discrepancy, the average discrepancy was `r round(new_l2_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l2_dds[2],2)`).
+
+## New DLL vs. Full CDI Correlations
+
+Finally, we re-evaluate the correlations between full CDI scores and DLL scores after the above DLL long supplement (1 and 2) swaps.
+
+```{r, echo=F}
+en_wg_dll_long_cols = na.omit(match(new_dll1long$english, colnames(d_mat_en)))
+en_ws_dll_long_cols = na.omit(match(new_dll2long$english, colnames(d_mat_en)))
+
+d_demo_en$newDLL1long_sum = rowSums(d_mat_en[,en_wg_dll_long_cols], na.rm=T) + 
+  d_demo_en$DLLsum
+d_demo_en$newDLL2long_sum = rowSums(d_mat_en[,en_ws_short_dll_cols], na.rm=T) +
+  d_demo_en$DLL2sum
+
+
+sp_wg_dll_long_cols = na.omit(match(new_dll1long$spanish, colnames(d_mat_sp)))
+sp_ws_dll_long_cols = na.omit(match(new_dll2long$spanish, colnames(d_mat_sp)))
+
+d_demo_sp$newDLL1long_sum = rowSums(d_mat_sp[,sp_wg_dll_long_cols], na.rm=T) +
+  d_demo_sp$DLL1sum
+d_demo_sp$newDLL2long_sum = rowSums(d_mat_sp[,sp_ws_short_dll_cols], na.rm=T) +
+  d_demo_sp$DLL2sum
+# are these *just* the DLL long supplement scores? need to add to Dll1sum / Dll2sum /
+
+young_en <- d_demo_en %>% filter(age<19, production<396)
+old_en <- d_demo_en %>% filter(age>15)
+
+young_sp <- d_demo_sp %>% filter(age<19, production<=428)
+old_sp <- d_demo_sp %>% filter(age>15)
+
+dll1long_en_cor = cor(young_en$production, young_en$newDLL1long_sum) 
+dll2long_en_cor = cor(old_en$production, old_en$newDLL2long_sum) 
+
+dll1long_sp_cor = cor(young_sp$production, young_sp$newDLL1long_sum) 
+dll2long_sp_cor = cor(old_sp$production, old_sp$newDLL2long_sum) 
+```
+
+New English DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_en_cor, 3)`$.
+New English DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_en_cor, 3)`$.
+
+New Spanish DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_sp_cor, 3)`$.
+New Spanish DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_sp_cor, 3)`$.
