@@ -326,21 +326,23 @@ p1 <- young_en %>%
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Production Score") + ylab("CDI WG Short + DLL Score") + 
   geom_abline(slope=length(en_wg_short_dll_cols) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() + stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- young_en %>%
   ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Production Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") + 
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- young_en %>%
   ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
   geom_abline(slope=length(en_wg_dll_long_cols) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") + 
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
@@ -383,21 +385,24 @@ p1 <- d_demo_en_comp %>%
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
   geom_abline(slope=length(en_wg_short_dll_colsC) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- d_demo_en_comp %>% 
   ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.1) +  
   xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
   geom_abline(slope=length(en_wg_dll_long_colsC) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
@@ -436,21 +441,24 @@ p1 <- old_en %>%
   geom_point(alpha=.1) +  
   xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 Score") + 
   geom_abline(slope=length(en_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- old_en %>% 
   ggplot(aes(x=production, y=WSshort, group=sex, color=sex)) + 
   geom_point(alpha=.1) +  
   xlab("Full CDI Production Score") + ylab("CDI WS Short Score") + 
   geom_abline(slope=length(en_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.1) +  
   xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
   geom_abline(slope=length(en_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
@@ -508,19 +516,22 @@ p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) +
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("DLL1 Score") + 
   geom_abline(slope=length(sp_wg_short_dll_cols) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
   geom_abline(slope=length(sp_wg_dll_long_cols) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
@@ -566,20 +577,23 @@ p1 <- d_demo_sp_comp %>%
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
   geom_abline(slope=length(sp_wg_short_dll_colsC) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
   geom_abline(slope=length(sp_wg_dll_long_colsC) / 428, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
@@ -597,19 +611,22 @@ p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) +
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("DLL2 Score") + 
   geom_abline(slope=length(sp_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth()
+  geom_smooth() +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("CDI WS Short Score") + 
   geom_abline(slope=length(sp_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
   geom_abline(slope=length(sp_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
-  geom_smooth() + theme(legend.position = "none")
+  geom_smooth() + theme(legend.position = "none") +
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9,3.9), heights=3.5)
 ggarrange(p1, p2, p3, nrow=1, common.legend = T)
