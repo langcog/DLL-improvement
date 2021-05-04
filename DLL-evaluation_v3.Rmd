@@ -211,7 +211,7 @@ dll2short <- dll2short %>%
                              TRUE ~ spanish))
                              
 length(intersect(dll2short$spanish, coefs$sp$definition)) # 153 / 177
-sort(setdiff(dll2short$spanish, coefs$sp$definition) )
+#sort(setdiff(dll2short$spanish, coefs$sp$definition) )
 
 #length(intersect(ws_short_enA$word, dll2short$english)) # 100
 #length(intersect(ws_short_enB$word, dll2short$english)) # ..
@@ -301,17 +301,23 @@ Spanish DLL items not in our wordbank IRT model: *tostada*, *algunos*, *alimenta
 Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's  production scores from the full CDI (WG/WS).
 The left panel shows full CDI scores vs. the DLL-ES1 short + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
 
-```{r cdi-short-DLL1-vs-full-cdi-English-prod, echo=F, message=F, fig.width=8, fig.height=4}
+```{r cdi-short-DLL1-vs-full-cdi-English-prod, echo=F, message=F, fig.width=10, fig.height=4}
 en_wg_short_cols = na.omit(match(wg_short_en$word, colnames(d_mat_en)))
 en_wg_short_dll_cols = na.omit(match(dll1short$english, colnames(d_mat_en))) # 160 items
 d_demo_en$production = rowSums(d_mat_en, na.rm=T)
 d_demo_en$DLLsum = rowSums(d_mat_en[,en_wg_short_dll_cols], na.rm=T)
 d_demo_en$WGshort = rowSums(d_mat_en[,en_wg_short_cols], na.rm=T)
 
+en_wg_dll_long_cols = union(en_wg_short_dll_cols, na.omit(match(dll1long$english, colnames(d_mat_en)))) # 234
+
+d_demo_en$DLL1long_sum = rowSums(d_mat_en[,en_wg_dll_long_cols], na.rm=T)
+
 young_en = d_demo_en %>% filter(age <= 18, production < 396) # want only WG kids
 
-dll_en_cor = cor(young_en$production, young_en$DLLsum) # .977
+dll_en_cor = cor(young_en$production, young_en$DLLsum) # .978
 wg_en_cor = cor(young_en$production, young_en$WGshort) # .963
+dll1long_en_cor = cor(young_en$production, young_en$DLL1long_sum) # .985
+# reliability: psych::alpha()
 
 # create SSE for linear extrapolation from DLL / short to full CDI:WG?
 
@@ -328,21 +334,28 @@ p2 <- young_en %>%
   xlab("Full CDI:WG Production Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
-  
+
+p3 <- young_en %>%
+  ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) +  
+  xlab("Full CDI:WG Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  geom_abline(slope=length(en_wg_dll_long_cols) / 395, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
-ggarrange(p1, p2, nrow=1, common.legend = T)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_prod.pdf", g)
 ```
 
 Overall, the correlation of children's CDI:WG short + DLL scores and their full CDI production scores is quite high ($r=`r round(dll_en_cor,2)`$), but as shown above, for small vocabulary sizes the DLL score overestimates full CDI:WG production scores, while for higher full CDI:WG scores the DLL underestimates vocab size (dotted line has slope $=`r length(en_wg_short_dll_cols)` / `r 395`$).
-However, the CDI:WG short form alone (right panel) shows a similar (and more extreme) overestimation for small vocabulary sizes.
+However, the CDI:WG short form alone (middle panel) shows a similar (and more extreme) overestimation for small vocabulary sizes.
 
 ### English DLL Level 1: Comprehension
 
 Now we do the same for comprehension (receptive vocabulary) using Wordbank's CDI:WG English data.
 
-```{r cdi-short-DLL1-vs-full-cdi-English-comp, echo=F, message=F, fig.width=8, fig.height=4}
+```{r cdi-short-DLL1-vs-full-cdi-English-comp, echo=F, message=F, fig.width=10, fig.height=4}
 load(here("data/comp/wordbank_eng_wg_webcdi.Rds"))
 
 too_young <- which(d_demo$age < 12) # 378 children can't be producing any words yet
@@ -356,8 +369,14 @@ d_demo_en_comp$comprehension = rowSums(d_mat_en_comp, na.rm=T)
 d_demo_en_comp$DLLsum = rowSums(d_mat_en_comp[,en_wg_short_dll_colsC], na.rm=T)
 d_demo_en_comp$WGshort = rowSums(d_mat_en_comp[,en_wg_short_colsC], na.rm=T)
 
+en_wg_dll_long_colsC = union(en_wg_short_dll_colsC, na.omit(match(dll1long$english, colnames(d_mat_en_comp)))) # 224
+
+d_demo_en_comp$DLL1long_sum = rowSums(d_mat_en_comp[,en_wg_dll_long_colsC], na.rm=T)
+
+
 dll_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLLsum) # .982
 wg_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$WGshort) # .959
+dll1long_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLL1long_sum) # .987
 
 p1 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
@@ -372,10 +391,17 @@ p2 <- d_demo_en_comp %>%
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
-  
-#grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
-ggarrange(p1, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
+
+p3 <- d_demo_en_comp %>% 
+  ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.1) +  
+  xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  geom_abline(slope=length(en_wg_dll_long_colsC) / 395, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
+#grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
+#g <- arrangeGrob(p1, p2, p3, nrow = 1, widths=c(3.5, 3.1, 3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
 ```
 
@@ -393,7 +419,6 @@ d_demo_en$production = rowSums(d_mat_en, na.rm=T)
 d_demo_en$DLL2sum = rowSums(d_mat_en[,en_ws_short_dll_cols], na.rm=T)
 d_demo_en$WSshort = rowSums(d_mat_en[,en_ws_short_cols], na.rm=T)
 
-# ToDo: plot this
 en_ws_dll_long_cols = union(en_ws_short_dll_cols, na.omit(match(dll2long$english, colnames(d_mat_en)))) # 293
 
 d_demo_en$DLL2long_sum = rowSums(d_mat_en[,en_ws_dll_long_cols], na.rm=T)
@@ -404,6 +429,7 @@ old_en = d_demo_en %>% filter(age > 15, age < 31)
 dll2_en_cor = cor(old_en$production, old_en$DLL2sum) # .992
 ws_en_cor = cor(old_en$production, old_en$WSshort) # .989
 
+dll2long_en_cor = cor(old_en$production, old_en$DLL2long_sum) # .988
 
 p1 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2sum, group=sex, color=sex)) + 
@@ -440,7 +466,7 @@ In comparison, the CDI:WS short form (A) score only overestimates full CDI score
 
 Now we look at overestimation for Spanish DLLs + CDI short forms.
 
-```{r DLL-vs-full-score-Spanish, echo=F, message=F, fig.width=8, fig.height=4}
+```{r DLL-vs-full-score-Spanish, echo=F, message=F, fig.width=10, fig.height=4}
 load(here("data/wordbank_sp_ws_wg_webcdi12-30mos.Rds"))
 d_demo_sp = d_demo
 d_mat_sp = d_mat
@@ -458,18 +484,26 @@ d_demo_sp$DLL2sum = rowSums(d_mat_sp[,sp_ws_short_dll_cols], na.rm=T)
 d_demo_sp$WGshort = rowSums(d_mat_sp[,sp_wg_short_cols], na.rm=T)
 d_demo_sp$WSshort = rowSums(d_mat_sp[,sp_ws_short_cols], na.rm=T)
 
+# DLL2 supplement
 sp_ws_dll_long_cols = union(sp_ws_short_dll_cols, na.omit(match(dll2long$spanish, colnames(d_mat_sp))))
-
 d_demo_sp$DLL2long_sum = rowSums(d_mat_sp[,sp_ws_dll_long_cols], na.rm=T)
+
+# DLL1 supplement
+sp_wg_dll_long_cols = union(sp_wg_short_dll_cols, na.omit(match(dll1long$spanish, colnames(d_mat_sp))))
+d_demo_sp$DLL1long_sum = rowSums(d_mat_sp[,sp_wg_dll_long_cols], na.rm=T)
+
 
 young_sp <- d_demo_sp %>% filter(age<19, production<=428)
 old_sp <- d_demo_sp %>% filter(age>15)
 
 dll1_sp_cor = cor(young_sp$production, young_sp$DLL1sum) # .988
+dll1long_sp_cor = cor(young_sp$production, young_sp$DLL1long_sum) # .992
 dll2_sp_cor = cor(old_sp$production, old_sp$DLL2sum) # .989
 wg_sp_cor = cor(young_sp$production, young_sp$WGshort) # .983
 ws_sp_cor = cor(old_sp$production, old_sp$WSshort) # .983
-  
+
+dll2long_sp_cor = cor(old_sp$production, old_sp$DLL2long_sum) # .982
+
 p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) + 
   geom_point(alpha=.3) +  
   xlab("Full CDI Production Score") + ylab("DLL1 Score") + 
@@ -482,8 +516,14 @@ p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) +
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
 
+p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) +  
+  xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  geom_abline(slope=length(sp_wg_dll_long_cols) / 428, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
-ggarrange(p1, p2, nrow=1, common.legend = T)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_prod_SP.pdf", g)
 ```
@@ -507,14 +547,19 @@ d_demo_sp_comp = d_demo[-too_young,]
 d_mat_sp_comp = d_mat_wg[-too_young,]
 
 sp_wg_short_colsC = na.omit(match(wg_short_sp$word, colnames(d_mat_sp_comp)))
-sp_wg_short_dll_colsC = na.omit(match(dll1short$spanish, colnames(d_mat_sp_comp))) # 160 items
+sp_wg_short_dll_colsC = na.omit(match(dll1short$spanish, colnames(d_mat_sp_comp))) # 144 items
+
+# DLL1 supplement
+sp_wg_dll_long_colsC = union(sp_wg_short_colsC, na.omit(match(dll1long$spanish, colnames(d_mat_sp_comp)))) # 160
+
 d_demo_sp_comp$comprehension = rowSums(d_mat_sp_comp, na.rm=T)
 d_demo_sp_comp$DLLsum = rowSums(d_mat_sp_comp[,sp_wg_short_dll_colsC], na.rm=T)
 d_demo_sp_comp$WGshort = rowSums(d_mat_sp_comp[,sp_wg_short_colsC], na.rm=T)
-
+d_demo_sp_comp$DLL1long_sum = rowSums(d_mat_sp_comp[,sp_wg_dll_long_colsC], na.rm=T)
 
 dll_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLLsum) # .982
 wg_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$WGshort) # .974
+dll1long_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLL1long_sum) # .981
 
 p1 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
@@ -529,9 +574,15 @@ p2 <- d_demo_sp_comp %>%
   xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none")
-  
+
+p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
+  geom_point(alpha=.3) +  
+  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  geom_abline(slope=length(sp_wg_dll_long_colsC) / 428, intercept=0, linetype = 'dashed') +
+  geom_smooth() + theme(legend.position = "none")
+
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
-ggarrange(p1, p2, nrow=1, common.legend = T)
+ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
 #ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
 ```
@@ -575,8 +626,10 @@ cortab <- data.frame(Language = c(rep("English", 3), rep("Spanish", 3)),
                       nrow(young_sp), nrow(young_sp), nrow(old_sp)),
                 "r with CDI short form" = c(wg_en_cor, wg_en_cor_comp, ws_en_cor,
                                             wg_sp_cor, wg_sp_cor_comp, ws_sp_cor),
-                "r with DLL-ES short inventory" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
-                                                    dll1_sp_cor, dll_sp_cor_comp, dll2_sp_cor))
+                "r with DLL-ES short" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
+                                                    dll1_sp_cor, dll_sp_cor_comp, dll2_sp_cor),
+                "r with DLL-ES long" = c(dll1long_en_cor, dll1long_en_cor_comp, dll2long_en_cor,
+                                        dll1long_sp_cor, dll1long_sp_cor_comp, dll2long_sp_cor))
 
 cortab %>% kable(., digits=3, table.attr = "style='width:30%;'") %>% 
   kable_classic(full_width = T, position = "center")
