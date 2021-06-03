@@ -94,7 +94,7 @@ Now we need to match the DLL words to the wordbank items for which we have IRT p
 
 ### Matching DLL short Level 1
 
-```{r match-english-words, echo=F, message=F, warning=F}
+```{r match-english-words, message=F, warning=F}
 # use with EN WG short form (12-18 mos)
 #dll1ENshort <- read_csv(here("DLL/DLL-ES1-short-English.csv")) # 79 items (81 after splitting defs)
 
@@ -132,7 +132,7 @@ dll1ENshort_num_matching = length(intersect(dll1short$english, coefs$en$definiti
 #length(intersect(dll1short$english, ws_short_enA$word)) # 36 of the WS
 ```
 
-```{r match-spanish-words, echo=F, message=F, warning=F}
+```{r match-spanish-words, message=F, warning=F}
 # use with SP WG short form (12-18 mos)
 #dll1SPshort <- read_csv(here("DLL/DLL-ES1-short-Spanish.csv")) # 67 items
 
@@ -219,7 +219,7 @@ length(intersect(dll2short$spanish, coefs$sp$definition)) # 153 / 177
 
 ### Matching DLL long supplement Level 1
 
-```{r dll1-long, echo=F, message=F}
+```{r dll1-long, message=F, warning=F}
 dll1long <- dll1long_raw %>% mutate(english = tolower(english)) %>%
   mutate(english = case_when(english == 'daddy (or word used in your family)' ~ 'daddy*',
                           english == 'toy' ~ 'toy (object)',
@@ -247,7 +247,7 @@ dll1long_SP_num_matching = length(intersect(dll1long$spanish, coefs$sp$definitio
 
 ### Matching DLL long supplement Level 2
 
-```{r dll2-long, echo=F, message=F}
+```{r dll2-long, message=F, warning=F}
 dll2long <- dll2long_raw %>% mutate(english = tolower(english)) %>%
   mutate(english = case_when(english == 'daddy (or name/word used in your family)' ~ 'daddy*',
                           english == 'teddy bear' ~ 'teddybear',
@@ -915,9 +915,11 @@ The median d_diff_sq on the DLL-ES Level 2 supplement is `r round(median(dll2lon
 Finally, for the hand-picked swaps we will report the original DLL list's easiness SSE, as well as the improvement (in easiness SSE) after the final swaps are made.
 
 ```{r, echo=F}
-dict %>% arrange(d_diff_sq) %>% select(-uni_lemma) %>%
-  kable(., digits=3, table.attr = "style='width:30%;'") %>% 
-  kable_classic(full_width = T, position = "center")
+#dict %>% arrange(d_diff_sq) %>% select(-uni_lemma) %>%
+#  kable(., digits=3, table.attr = "style='width:30%;'") %>% 
+#  kable_classic(full_width = T, position = "center")
+dict %>% DT::datatable() %>%
+  DT::formatRound(columns=c("en_d","sp_d","en_sp_d_diff","d_diff_sq"), digits=3)
 ```
 
 ## DLL-ES Level 1 Long Supplement Swaps
@@ -936,7 +938,7 @@ orig_l1_dds = dll1long %>%
 l1_removed <- c("give","ear","cheese","crib","banana","shirt","chicken (food)",
                 "moo","nap","apple","stop","drawer","face","swing (object)","belly button")
 
-l1_added <- c("draw", "elephant", "animal", "scissors", "brother", "sister", "toothbrush",
+l1_added <- c("draw", "elephant", "animal", "scissors", "brother", "sister", "grandpa",
               "hammer", "hurry", "squirrel", "show", "firetruck", "boots", "penguin",
               "turtle")
 
@@ -973,7 +975,7 @@ orig_l2_dds = dll2long %>%
 
 l2_removed <- c("bubbles", "water (beverage)", "soup", "bread", "table", "coat",
                 "pencil", "bee", "chocolate", "cheese", "crib", "motorcycle",
-                "girl", "soda/pop", "chicken (food)")
+                "nose", "soda/pop", "chicken (food)") # instead of dropping "girl" (15th), drop "nose" (16th)
 
 l2_added <- c("elephant", "animal", "scissors", "helicopter", "brother",
               "sister", "vagina*", "toothbrush", "hammer", "closet", "shower",
