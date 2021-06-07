@@ -322,24 +322,24 @@ dll1long_en_cor = cor(young_en$production, young_en$DLL1long_sum) # .985
 # create SSE for linear extrapolation from DLL / short to full CDI:WG?
 
 p1 <- young_en %>%
-  ggplot(aes(x=production, y=DLLsum, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("CDI WG Short + DLL Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Short Score") + 
   geom_abline(slope=length(en_wg_short_dll_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- young_en %>%
-  ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("CDI WG Short Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- young_en %>%
-  ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -381,25 +381,25 @@ wg_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$WGshort) # .95
 dll1long_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLL1long_sum) # .987
 
 p1 <- d_demo_en_comp %>%
-  ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
+  ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Short Score") + 
   geom_abline(slope=length(en_wg_short_dll_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- d_demo_en_comp %>%
-  ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
+  ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- d_demo_en_comp %>% 
-  ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
+  ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -410,12 +410,12 @@ ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
 ```
 
-The correlation of children's CDI:WG short + DLL scores and their full CDI comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
+The correlation of children's DLL1 scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from the DLL1 to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
 
 ### English DLL Level 2 (Production)
 
-Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's full production scores from the CDI:WS.
-The left panel shows full CDI scores vs. the DLL-ES2 short + CDI:WS short form (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
+Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES2 short form predict children's full production scores from the CDI:WS.
+The left panel shows full CDI scores vs. the DLL-ES2 short inventory (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
 
 ```{r cdi-short-DLL2-vs-full-cdi-English, echo=F, message=F, fig.width=10, fig.height=4}
 en_ws_short_cols = na.omit(match(ws_short_enA$word, colnames(d_mat_en))) # 
@@ -437,25 +437,25 @@ ws_en_cor = cor(old_en$production, old_en$WSshort) # .989
 dll2long_en_cor = cor(old_en$production, old_en$DLL2long_sum) # .988
 
 p1 <- old_en %>% 
-  ggplot(aes(x=production, y=DLL2sum, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=DLL2sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Short Score") + 
   geom_abline(slope=length(en_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- old_en %>% 
-  ggplot(aes(x=production, y=WSshort, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=WSshort)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI Production Score") + ylab("CDI WS Short Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(en_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- old_en %>% 
-  ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
+  ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -512,23 +512,23 @@ ws_sp_cor = cor(old_sp$production, old_sp$WSshort) # .983
 
 dll2long_sp_cor = cor(old_sp$production, old_sp$DLL2long_sum) # .982
 
-p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) + 
+p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("DLL1 Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Short Score") + 
   geom_abline(slope=length(sp_wg_short_dll_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
-p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
+p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("CDI WG Short Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
-p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum, group=sex, color=sex)) + 
+p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -573,24 +573,24 @@ wg_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$WGshort) # .97
 dll1long_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLL1long_sum) # .981
 
 p1 <- d_demo_sp_comp %>%
-  ggplot(aes(x=comprehension, y=DLLsum, group=sex, color=sex)) + 
+  ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Short Score") + 
   geom_abline(slope=length(sp_wg_short_dll_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- d_demo_sp_comp %>%
-  ggplot(aes(x=comprehension, y=WGshort, group=sex, color=sex)) + 
+  ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
-p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum, group=sex, color=sex)) + 
+p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comprehension Score") + ylab("CDI WG Short + DLL1 supplement Score") + 
+  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -601,29 +601,29 @@ ggarrange(p1, p2, p3, nrow=1, common.legend = T)
 #ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
 ```
 
-The correlation of children's CDI:WG short + DLL scores and their full CDI comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
+The correlation of children's DLL1 short scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
 
 ### Spanish DLL Level 2
 
 ```{r spanish-dll2, echo=F, message=F, fig.width=10, fig.height=4}
 
-p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum, group=sex, color=sex)) + 
+p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("DLL2 Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Short Score") + 
   geom_abline(slope=length(sp_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
-p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort, group=sex, color=sex)) + 
+p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("CDI WS Short Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(sp_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
-p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum, group=sex, color=sex)) + 
+p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI Production Score") + ylab("CDI WS Short + DLL2 supplement Score") + 
+  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Extended Score") + 
   geom_abline(slope=length(sp_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -645,7 +645,7 @@ cortab <- data.frame(Language = c(rep("English", 3), rep("Spanish", 3)),
                                             wg_sp_cor, wg_sp_cor_comp, ws_sp_cor),
                 "r with DLL-ES short" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
                                                     dll1_sp_cor, dll_sp_cor_comp, dll2_sp_cor),
-                "r with DLL-ES long" = c(dll1long_en_cor, dll1long_en_cor_comp, dll2long_en_cor,
+                "r with DLL-ES extended" = c(dll1long_en_cor, dll1long_en_cor_comp, dll2long_en_cor,
                                         dll1long_sp_cor, dll1long_sp_cor_comp, dll2long_sp_cor))
 
 cortab %>% kable(., digits=3, table.attr = "style='width:30%;'") %>% 
