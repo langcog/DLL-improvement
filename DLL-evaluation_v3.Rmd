@@ -796,6 +796,12 @@ We recommend that the `r nrow(bad_dll2)` items (shown below) with a squared diff
 knitr::kable(bad_dll2, digits=2, table.attr = "style='width:30%;'") %>% kable_classic(full_width = T, position = "center")
 ```
 
+```{r save-dll-diffs, echo=F}
+write.csv(pars_dll1short, file="DLL1short-IRT-parms.csv")
+write.csv(pars_dll2short, file="DLL2short-IRT-parms.csv")
+```
+
+
 Now we examine the doublets on the long supplemental DLL forms, and make recommendations of mismatched items to swap out.
 
 ### DLL Level 1 Long Supplement
@@ -1022,6 +1028,15 @@ d_demo_sp$newDLL2long_sum = rowSums(d_mat_sp[,sp_ws_short_dll_cols], na.rm=T) +
   d_demo_sp$DLL2sum
 # are these *just* the DLL long supplement scores? need to add to Dll1sum / Dll2sum /
 
+# comprehension
+en_wg_dll_long_cols = na.omit(match(new_dll1long$english, colnames(d_mat_en_comp)))
+d_demo_en_comp$newDLL1long_sum = rowSums(d_mat_en_comp[,en_wg_dll_long_cols], na.rm=T) + 
+  d_demo_en_comp$DLLsum
+
+sp_wg_dll_long_cols = na.omit(match(new_dll1long$spanish, colnames(d_mat_sp_comp)))
+d_demo_sp_comp$newDLL1long_sum = rowSums(d_mat_sp_comp[,sp_wg_dll_long_cols], na.rm=T) +
+  d_demo_sp_comp$DLLsum
+
 young_en <- d_demo_en %>% filter(age<19, production<396)
 old_en <- d_demo_en %>% filter(age>15)
 
@@ -1033,10 +1048,19 @@ dll2long_en_cor = cor(old_en$production, old_en$newDLL2long_sum)
 
 dll1long_sp_cor = cor(young_sp$production, young_sp$newDLL1long_sum) 
 dll2long_sp_cor = cor(old_sp$production, old_sp$newDLL2long_sum) 
+
+dll1long_new_en_cor_comp = with(d_demo_en_comp, cor(comprehension, newDLL1long_sum)) 
+dll1long_new_sp_cor_comp = with(d_demo_sp_comp, cor(comprehension, newDLL1long_sum))
 ```
 
+New English DLL1 long supplement vs. full CDI:WG comprehension: $r = `r round(dll1long_new_en_cor_comp, 3)`$. 
+
 New English DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_en_cor, 3)`$.
+
 New English DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_en_cor, 3)`$.
 
+New Spanish DLL1 long supplement vs. full CDI:WG comprehension: $r = `r round(dll1long_new_sp_cor_comp, 3)`$.
+
 New Spanish DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_sp_cor, 3)`$.
+
 New Spanish DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_sp_cor, 3)`$.
