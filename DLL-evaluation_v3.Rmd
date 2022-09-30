@@ -67,6 +67,7 @@ Our original concern was that the current DLL-ES test might not perform well for
 The DLL lists are meant to be used together with the original English and Spanish MCDI short forms.
 
 ```{r load-all-DLL-lists, echo=F, message=F}
+# Matched (i.e. short) DLLs
 dll1short_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Short Form Supplements (Level 1).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
@@ -82,6 +83,7 @@ dll2exclusions <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long
   rename(english=`English Word`, 
          spanish=`Spanish Word`) # 210
 
+# Extended (i.e. long) DLLs 
 dll1long_raw <- read_csv(here("DLL/Sandy/DLL-ES Supplement Words - DLL-ES Long Form Supplement (Level 1).csv")) %>% 
   rename(english=`English Word`, 
          spanish=`Spanish Word`) 
@@ -217,7 +219,7 @@ length(intersect(dll2short$spanish, coefs$sp$definition)) # 153 / 177
 #length(intersect(ws_short_enB$word, dll2short$english)) # ..
 ```
 
-### Matching DLL long supplement Level 1
+### Matching DLL Extended Level 1
 
 ```{r dll1-long, message=F, warning=F}
 dll1long <- dll1long_raw %>% mutate(english = tolower(english)) %>%
@@ -245,7 +247,7 @@ dll1long <- dll1long %>% mutate(spanish = tolower(spanish)) %>%
 dll1long_SP_num_matching = length(intersect(dll1long$spanish, coefs$sp$definition)) # 74 / 74 match
 ```
 
-### Matching DLL long supplement Level 2
+### Matching DLL Extended Level 2
 
 ```{r dll2-long, message=F, warning=F}
 dll2long <- dll2long_raw %>% mutate(english = tolower(english)) %>%
@@ -298,8 +300,8 @@ Spanish DLL items not in our wordbank IRT model: *tostada*, *algunos*, *alimenta
 
 ### English DLL Level 1: Production
 
-Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's  production scores from the full CDI (WG/WS).
-The left panel shows full CDI scores vs. the DLL-ES1 short + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
+Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's  production scores from the long form (LF) CDI (WG/WS).
+The left panel shows LF CDI scores vs. the DLL-ES1 Matched + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
 
 ```{r cdi-short-DLL1-vs-full-cdi-English-prod, echo=F, message=F, fig.width=10, fig.height=4}
 en_wg_short_cols = na.omit(match(wg_short_en$word, colnames(d_mat_en)))
@@ -324,22 +326,22 @@ dll1long_en_cor = cor(young_en$production, young_en$DLL1long_sum) # .985
 p1 <- young_en %>%
   ggplot(aes(x=production, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Short Score") + 
+  xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(en_wg_short_dll_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- young_en %>%
   ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("CDI:WG Short Score") + 
+  xlab("CDI:WG LF Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- young_en %>%
   ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Extended Score") + 
+  geom_point(alpha=.3) +
+  xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -383,7 +385,7 @@ dll1long_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLL1long
 p1 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Short Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(en_wg_short_dll_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -391,7 +393,7 @@ p1 <- d_demo_en_comp %>%
 p2 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("CDI:WG Short Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -399,7 +401,7 @@ p2 <- d_demo_en_comp %>%
 p3 <- d_demo_en_comp %>% 
   ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Extended Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -410,7 +412,7 @@ ggarrange(p1, p3, p2, nrow=1, common.legend = T)
 #ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
 ```
 
-The correlation of children's DLL1 scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from the DLL1 to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
+The correlation of children's DLL1 scores and their CDI:WG LF comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from the DLL-ES1 to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
 
 ### English DLL Level 2 (Production)
 
@@ -439,7 +441,7 @@ dll2long_en_cor = cor(old_en$production, old_en$DLL2long_sum) # .988
 p1 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Short Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Matched Score") + 
   geom_abline(slope=length(en_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -447,7 +449,7 @@ p1 <- old_en %>%
 p2 <- old_en %>% 
   ggplot(aes(x=production, y=WSshort)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI:WS Production Score") + ylab("CDI:WS Short Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(en_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -455,7 +457,7 @@ p2 <- old_en %>%
 p3 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.1) +  
-  xlab("Full CDI:WS Production Score") + ylab("DLL-ES1 Extended Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -466,7 +468,7 @@ ggarrange(p1, p3, p2, nrow=1, common.legend = T)
 #ggsave("DLL2short_vs_CDIWS_EN.pdf", g)
 ```
 
-Overall, the correlation of children's CDI:WS short + DLL2 scores and their full CDI production scores is quite high ($r=`r round(dll2_en_cor,2)`$), but as shown above, the DLL2 again mostly overestimates  production scores on the full CDI (dotted line has slope $=`r length(en_ws_short_dll_cols)` / `r 680`$).
+Overall, the correlation of children's CDI:WS short + DLL2 scores and their full CDI production scores is quite high ($r=`r round(dll2_en_cor,2)`$), but as shown above, the DLL2 again mostly overestimates production scores on the full CDI (dotted line has slope $=`r length(en_ws_short_dll_cols)` / `r 680`$).
 In comparison, the CDI:WS short form (A) score only overestimates full CDI scores for smaller vocabulary sizes (<400).
 
 
@@ -514,21 +516,21 @@ dll2long_sp_cor = cor(old_sp$production, old_sp$DLL2long_sum) # .982
 
 p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Short Score") + 
+  xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(sp_wg_short_dll_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("CDI:WG Short Score") + 
+  xlab("CDI:WG LF Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Production Score") + ylab("DLL-ES1 Extended Score") + 
+  xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -540,7 +542,7 @@ ggarrange(p1, p3, p2, nrow=1, common.legend = T)
 ```
 
 
-Using Wordbank data from `r nrow(young_sp)` Spanish-speaking children aged 12-18 months, we test how well sumscores from the DLL-ES1 short Spanish form correlate with children's full CDI:WG production scores.
+Using Wordbank data from `r nrow(young_sp)` Spanish-speaking children aged 12-18 months, we test how well sumscores from the DLL-ES1 Matched form correlate with children's full CDI:WG production scores.
 
 As for English, the correlation of Spanish-speaking children's DLL scores and their full CDI:WG production scores is quite high ($r=`r round(dll1_sp_cor,2)`$), but as shown above, their DLL score overestimates the production score on the full CDI at smaller vocabulary sizes (dotted line has slope $=`r length(sp_wg_short_dll_cols)` / `r 428`$).
 Do note that few children in this dataset have large productive vocabularies.
@@ -575,7 +577,7 @@ dll1long_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLL1long
 p1 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Short Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(sp_wg_short_dll_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -583,14 +585,14 @@ p1 <- d_demo_sp_comp %>%
 p2 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("CDI:WG Short Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WG Comp. Score") + ylab("DLL-ES1 Extended Score") + 
+  xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -601,29 +603,29 @@ ggarrange(p1, p3, p2, nrow=1, common.legend = T)
 #ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
 ```
 
-The correlation of children's DLL1 short scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
+The correlation of children's DLL1 Matched scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
 
-### Spanish DLL Level 2
+### Spanish DLL Level 2 (Production)
 
 ```{r spanish-dll2, echo=F, message=F, fig.width=10, fig.height=4}
 
 p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Short Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Short Score") + 
   geom_abline(slope=length(sp_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WS Production Score") + ylab("CDI:WS Short Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(sp_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
 
 p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("Full CDI:WS Production Score") + ylab("DLL-ES2 Extended Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Extended Score") + 
   geom_abline(slope=length(sp_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
@@ -643,7 +645,7 @@ cortab <- data.frame(Language = c(rep("English", 3), rep("Spanish", 3)),
                       nrow(young_sp), nrow(young_sp), nrow(old_sp)),
                 "r with CDI short form" = c(wg_en_cor, wg_en_cor_comp, ws_en_cor,
                                             wg_sp_cor, wg_sp_cor_comp, ws_sp_cor),
-                "r with DLL-ES short" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
+                "r with DLL-ES matched" = c(dll_en_cor, dll_en_cor_comp, dll2_en_cor,
                                                     dll1_sp_cor, dll_sp_cor_comp, dll2_sp_cor),
                 "r with DLL-ES extended" = c(dll1long_en_cor, dll1long_en_cor_comp, dll2long_en_cor,
                                         dll1long_sp_cor, dll1long_sp_cor_comp, dll2long_sp_cor))
@@ -688,7 +690,7 @@ sp_dll2_ease <- coefs$sp %>% mutate(onDLL =
 ```
 
 
-Overall, it seems that many of the items on the DLL are somewhat easier than average, and thus these forms tend to overestimate children's full CDI scores (indeed, for items on the DLL1 English short form, the average easiness is `r round(en_dll1_ease[2,]$easiness,2)`, while the mean easiness of items not on the DLL is `r round(en_dll1_ease[1,]$easiness,2)`).
+Overall, it seems that many of the items on the DLL are somewhat easier than average, and thus these forms tend to overestimate children's full CDI scores (indeed, for English items on the DLL1 Matched form, the average easiness is `r round(en_dll1_ease[2,]$easiness,2)`, while the mean easiness of items not on the DLL is `r round(en_dll1_ease[1,]$easiness,2)`).
 This is also true of the CDI:WG short English form: the average easiness is `r round(en_wg_short_ease[2,]$easiness,2)` and the average ease of items not on the WG short form is `r round(en_wg_short_ease[1,]$easiness,2)`.
 The CDI:WS short English form (A) is less biased towards easy items: average easiness is `r round(en_ws_short_ease[2,]$easiness,2)` vs. `r round(en_ws_short_ease[1,]$easiness,2)` for items not on the short WS.
 The histograms below show the distribution of easiness parameters for English (left) and Spanish (right) CDI words. 
@@ -726,11 +728,11 @@ To start, we examine IRT easiness parameters for the doublets on the existing DL
 We want to whether assess doublet items have similar difficulty (operationalized by their IRT parameters) in English and in Spanish. 
 For example, consider if "perro" was for some reason much more difficult than "dog", then you wouldn't want to include it because it wouldn't be a good item for estimating vocabulary overlap!
 
-Below are shown the parameters for items from the DLL Level 1 short form: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and en_sp_d_diff simply shows the difference (English - Spanish) in the easiness parameter).
+Below are shown the parameters for items from the DLL-ES1 Matched form: en_d = English easiness, sp_d = Spanish easiness), ordered by the most to least discrepant (difficulty difference squared); (_a1 columns show item discriminations (slopes), and en_sp_d_diff simply shows the difference (English - Spanish) in the easiness parameter).
 
 ### DLL Level 1 Short Form
 
-For the short form, we merely want to identify items that have very different difficulty in English and Spanish, and recommend that researchers interested in estimating conceptual overlap in bilinguals not include these items in their calculations due to the bias.
+For the Matched form, we merely want to identify items that have very different difficulty in English and Spanish, and recommend that researchers interested in estimating conceptual overlap in bilinguals not include these items in their calculations due to the bias.
 Below is shown the distribution of the squared difference in difficulty for doublets from the DLL Level 1 short form.
 
 ```{r compare-doublet-difficulties-dll1-short, echo=F}
@@ -757,7 +759,7 @@ hist(pars_dll1short$d_diff_sq, main="", xlab="(EN diff - SP diff)^2")
 abline(v=threshold,col="red")
 ```
 
-The mean squared difference in difficulty of doublets on the DLL Level 1 short form is `r round(mean(pars_dll1short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll1short$d_diff_sq), 2)`), and as shown above this distribution is highly skewed: most doublets are fairly well-matched (median d_diff_sq=0.99), but a few items are extremely mismatched.
+The mean squared difference in difficulty of doublets on the DLL-ES1 Matched form is `r round(mean(pars_dll1short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll1short$d_diff_sq), 2)`), and as shown above this distribution is highly skewed: most doublets are fairly well-matched (median d_diff_sq=0.99), but a few items are extremely mismatched.
 We recommend that the `r nrow(bad_dll1)` items (shown below) with a squared difficulty difference of 7.17 (mean + 1.5 * SD) or more be excluded from calculations of conceptual overlap.
 
 ```{r, echo=F}
@@ -765,7 +767,7 @@ knitr::kable(bad_dll1, digits=2, table.attr = "style='width:30%;'") %>%
   kable_classic(full_width = T, position = "center")
 ```
 
-### DLL Level 2 Short Form
+### DLL Level 2 Matched Form
 
 ```{r compare-doublet-difficulties-dll2-short, echo=F}
 pars_dll2short <- dll2short %>% 
@@ -789,7 +791,7 @@ hist(pars_dll2short$d_diff_sq, main="", xlab="(EN diff - SP diff)^2")
 abline(v=threshold,col="red")
 ```
 
-The mean squared difference in difficulty of doublets on the DLL Level 2 short form is `r round(mean(pars_dll2short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll2short$d_diff_sq), 2)`), and once again while most doublets are fairly well-matched, several items are extremely mismatched.
+The mean squared difference in difficulty of doublets on the DLL-ES2 Matched form is `r round(mean(pars_dll2short$d_diff_sq), 2)` (SD=`r round(sd(pars_dll2short$d_diff_sq), 2)`), and once again while most doublets are fairly well-matched, several items are extremely mismatched.
 We recommend that the `r nrow(bad_dll2)` items (shown below) with a squared difficulty difference of 8.22 (mean + 1.5 * SD) or more be excluded from calculations of conceptual overlap.
 
 ```{r, echo=F}
@@ -804,9 +806,9 @@ write.csv(pars_dll2short, file="DLL2short-IRT-parms.csv")
 
 Now we examine the doublets on the long supplemental DLL forms, and make recommendations of mismatched items to swap out.
 
-### DLL Level 1 Long Supplement
+### DLL Level 1 Extended
 
-Below are shown the parameters for items from the DLL Level 1 long supplement.
+Below are shown the parameters for items from the DLL Level 1 extended form.
 Clearly some of these items have quite different difficulty levels in English and Spanish, and we should try to find items that are more equivalent and swap them onto the long supplement.
 
 ```{r compare-doublet-difficulties-dll1-long, echo=F}
@@ -839,7 +841,7 @@ knitr::kable(pars_dll, digits=2, table.attr = "style='width:30%;'") %>% kable_cl
 #colMeans(pars_dll[,c("sp_d","en_d")])
 ```
 
-### DLL Level 2 Long Supplement
+### DLL Level 2 Extended
 
 ```{r compare-doublet-difficulties-dll2, echo=F}
 # a1 = discrimination, d = difficulty, g = lower-bound, u = upper-bound
@@ -928,7 +930,7 @@ dict %>% DT::datatable() %>%
   DT::formatRound(columns=c("en_d","sp_d","en_sp_d_diff","d_diff_sq"), digits=3)
 ```
 
-## DLL-ES Level 1 Long Supplement Swaps
+## DLL-ES1 Extended Form Swaps
 
 ```{r, echo=F}
 # need the full dict 
@@ -963,12 +965,12 @@ new_l1_dds = new_dll1long %>%
 ratio_l1_improv = orig_l1_dds / new_l1_dds
 ```
 
-The average discrepancy on the original Level 1 supplement was `r round(orig_l1_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l1_dds[2],2)`).
+The average discrepancy on the original DLL-ES1 Extended was `r round(orig_l1_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l1_dds[2],2)`).
 After substituting 15 of the items with the largest discrepancy, the average discrepancy was `r round(new_l1_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l1_dds[2],2)`).
 
-## DLL-ES Level 2 Long Supplement Swaps
+## DLL-ES2 Extended Form Swaps
 
-Now we evaluate the swaps for the Level 2 long supplement.
+Now we evaluate the swaps for the DLL-ES2 Extended form.
 
 ```{r, echo=F}
 orig_l2_dds = dll2long %>% 
@@ -1002,12 +1004,12 @@ new_l2_dds = new_dll2long %>%
 ratio_l2_improv = orig_l2_dds / new_l2_dds
 ```
 
-The average discrepancy on the original Level 2 supplement was `r round(orig_l2_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l2_dds[2],2)`).
-After substituting 15 of the items with the largest discrepancy, the average discrepancy was `r round(new_l2_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l2_dds[2],2)`).
+The average discrepancy on the original DLL-ES2 Extended was `r round(orig_l2_dds[1], 2)`, with the Spanish items being on average more difficult than their English equivalents (English - Spanish ease: `r round(orig_l2_dds[2],2)`).
+After substituting the 15 most discrepant items, the average discrepancy was `r round(new_l2_dds[1], 2)`, and the overall difference between languages was closer to zero (English - Spanish ease: `r round(new_l2_dds[2],2)`).
 
 ## New DLL vs. Full CDI Correlations
 
-Finally, we re-evaluate the correlations between full CDI scores and DLL scores after the above DLL long supplement (1 and 2) swaps.
+Finally, we re-evaluate the correlations between full CDI scores and DLL scores after the above swaps on the DLL-ES1 and DLL-ES2 Extended forms.
 
 ```{r, echo=F}
 en_wg_dll_long_cols = na.omit(match(new_dll1long$english, colnames(d_mat_en)))
@@ -1053,14 +1055,11 @@ dll1long_new_en_cor_comp = with(d_demo_en_comp, cor(comprehension, newDLL1long_s
 dll1long_new_sp_cor_comp = with(d_demo_sp_comp, cor(comprehension, newDLL1long_sum))
 ```
 
-New English DLL1 long supplement vs. full CDI:WG comprehension: $r = `r round(dll1long_new_en_cor_comp, 3)`$. 
+New DLL-ES1 Extended vs. English CDI:WG LF comprehension scores: $r = `r round(dll1long_new_en_cor_comp, 3)`$. 
+New DLL-ES1 Extended vs. Spanish CDI:WG LF comprehension scores: $r = `r round(dll1long_new_sp_cor_comp, 3)`$.
 
-New English DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_en_cor, 3)`$.
+New DLL-ES1 Extended vs. English CDI:WG LF production scores: $r = `r round(dll1long_en_cor, 3)`$.
+New DLL-ES1 Extended vs. Spanish CDI:WG LF production scores: $r = `r round(dll1long_sp_cor, 3)`$.
 
-New English DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_en_cor, 3)`$.
-
-New Spanish DLL1 long supplement vs. full CDI:WG comprehension: $r = `r round(dll1long_new_sp_cor_comp, 3)`$.
-
-New Spanish DLL1 long supplement vs. full CDI:WG production: $r = `r round(dll1long_sp_cor, 3)`$.
-
-New Spanish DLL2 long supplement vs. full CDI:WS production: $r = `r round(dll2long_sp_cor, 3)`$.
+New DLL-ES2 Extended vs. English CDI:WS LF production scores: $r = `r round(dll2long_en_cor, 3)`$.
+New DLL-ES2 Extended vs. Spanish CDI:WS LF production scores: $r = `r round(dll2long_sp_cor, 3)`$.
