@@ -300,7 +300,7 @@ Spanish DLL items not in our wordbank IRT model: *tostada*, *algunos*, *alimenta
 
 ### English DLL Level 1: Production
 
-Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 short English form + CDI:WG short form predict children's  production scores from the long form (LF) CDI (WG/WS).
+Using data from `r nrow(subset(d_demo_en, age<19))` English-speaking children 12-18 month of age from Wordbank, we test how well sumscores from the DLL-ES1 matched form + CDI:WG short form predict children's English production scores from the long form (LF) CDI (WG/WS).
 The left panel shows LF CDI scores vs. the DLL-ES1 Matched + CDI:WG short score, and the right panel shows the full CDI scores vs. just the CDI:WG short form score.
 
 ```{r cdi-short-DLL1-vs-full-cdi-English-prod, echo=F, message=F, fig.width=10, fig.height=4}
@@ -416,8 +416,8 @@ The correlation of children's DLL1 scores and their CDI:WG LF comprehension scor
 
 ### English DLL Level 2 (Production)
 
-Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES2 short form predict children's full production scores from the CDI:WS.
-The left panel shows full CDI scores vs. the DLL-ES2 short inventory (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
+Using data from `r nrow(subset(d_demo_en, age>15 & age<31))` English-speaking children 16-30 month of age from Wordbank, we test how well sumscores from the DLL-ES2 matched form predict children's full production scores from the CDI:WS.
+The left panel shows full CDI scores vs. the DLL-ES2 matched inventory (A) score, and the right panel shows the full CDI scores vs. just the CDI:WG short form (A) score.
 
 ```{r cdi-short-DLL2-vs-full-cdi-English, echo=F, message=F, fig.width=10, fig.height=4}
 en_ws_short_cols = na.omit(match(ws_short_enA$word, colnames(d_mat_en))) # 
@@ -611,7 +611,7 @@ The correlation of children's DLL1 Matched scores and their full CDI:WG comprehe
 
 p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
   geom_point(alpha=.3) +  
-  xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Short Score") + 
+  xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Matched Score") + 
   geom_abline(slope=length(sp_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
   stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
