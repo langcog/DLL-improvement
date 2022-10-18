@@ -348,8 +348,8 @@ p3 <- young_en %>%
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("DLL1short_vs_CDIWG_prod.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL1short_vs_CDIWG_prod.pdf", g)
 ```
 
 Overall, the correlation of children's CDI:WG short + DLL scores and their full CDI production scores is quite high ($r=`r round(dll_en_cor,2)`$), but as shown above, for small vocabulary sizes the DLL score overestimates full CDI:WG production scores, while for higher full CDI:WG scores the DLL underestimates vocab size (dotted line has slope $=`r length(en_wg_short_dll_cols)` / `r 395`$).
@@ -408,8 +408,8 @@ p3 <- d_demo_en_comp %>%
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, p3, nrow = 1, widths=c(3.5, 3.1, 3.1), heights=3.2)
-#ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL1short_vs_CDIWG_comp_EN.pdf", g)
 ```
 
 The correlation of children's DLL1 scores and their CDI:WG LF comprehension scores is quite high ($r=`r round(dll_en_cor_comp,2)`$), and extrapolating from the DLL-ES1 to full CDI:WG scores shows very little overestimation (less than when using the CDI:WG short form alone).
@@ -464,8 +464,8 @@ p3 <- old_en %>%
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("DLL2short_vs_CDIWS_EN.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL2short_vs_CDIWS_EN.pdf", g)
 ```
 
 Overall, the correlation of children's CDI:WS short + DLL2 scores and their full CDI production scores is quite high ($r=`r round(dll2_en_cor,2)`$), but as shown above, the DLL2 again mostly overestimates production scores on the full CDI (dotted line has slope $=`r length(en_ws_short_dll_cols)` / `r 680`$).
@@ -537,8 +537,8 @@ p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, co
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("DLL1short_vs_CDIWG_prod_SP.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL1short_vs_CDIWG_prod_SP.pdf", g)
 ```
 
 
@@ -599,8 +599,8 @@ p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , grou
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL1short_vs_CDIWG_comp_SP.pdf", g)
 ```
 
 The correlation of children's DLL1 Matched scores and their full CDI:WG comprehension scores is quite high ($r=`r round(dll_sp_cor_comp,2)`$), and extrapolating from DLL to full CDI:WG scores shows very little overestimation--similar to the level shown by using the CDI:WG alone.
@@ -632,8 +632,8 @@ p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, colo
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("DLL2short_vs_CDIWS_SP.pdf", g)
+g <- arrangeGrob(p1, p3, p2, nrow = 1, widths=c(3.2,3.2,3.2), heights=3.2)
+ggsave("DLL2short_vs_CDIWS_SP.pdf", g)
 ```
 
 ## Full CDI vs. Short CDI / DLL Correlations
@@ -714,8 +714,8 @@ p2 <- ggplot(coefs$sp, aes(x=d)) + geom_histogram() +
   geom_vline(xintercept=sp_dll2_ease$easiness, color="orange", linetype=c("dashed","solid"))
 
 grid.arrange(p1, p2, nrow = 1, widths=c(4,4), heights=3)
-#g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.5,3.1), heights=3.2)
-#ggsave("EN_vs_SP_item_easiness_distros.pdf", g)
+g <- arrangeGrob(p1, p2, nrow = 1, widths=c(3.2,3.2), heights=3.2)
+ggsave("EN_vs_SP_item_easiness_distros.pdf", g)
 ```
 
 
