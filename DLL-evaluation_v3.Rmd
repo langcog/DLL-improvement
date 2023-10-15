@@ -325,26 +325,26 @@ dll1long_en_cor = cor(young_en$production, young_en$DLL1long_sum) # .985
 
 p1 <- young_en %>%
   ggplot(aes(x=production, y=DLLsum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(en_wg_short_dll_cols) / 395, intercept=0, linetype = 'dashed') +
-  geom_smooth() + stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  geom_smooth() + stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- young_en %>%
   ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- young_en %>%
   ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_cols) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") + 
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
@@ -384,27 +384,27 @@ dll1long_en_cor_comp = cor(d_demo_en_comp$comprehension, d_demo_en_comp$DLL1long
 
 p1 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(en_wg_short_dll_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- d_demo_en_comp %>%
   ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(en_wg_short_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- d_demo_en_comp %>% 
   ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.1) +  
+  geom_point(alpha=.1) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_wg_dll_long_colsC) / 395, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
@@ -440,27 +440,27 @@ dll2long_en_cor = cor(old_en$production, old_en$DLL2long_sum) # .988
 
 p1 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2sum)) + # , group=sex, color=sex
-  geom_point(alpha=.1) +  
+  geom_point(alpha=.1) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Matched Score") + 
   geom_abline(slope=length(en_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- old_en %>% 
   ggplot(aes(x=production, y=WSshort)) + # , group=sex, color=sex
-  geom_point(alpha=.1) +  
+  geom_point(alpha=.1) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(en_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- old_en %>% 
   ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.1) +  
+  geom_point(alpha=.1) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(en_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9, 3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
@@ -515,25 +515,25 @@ ws_sp_cor = cor(old_sp$production, old_sp$WSshort) # .983
 dll2long_sp_cor = cor(old_sp$production, old_sp$DLL2long_sum) # .982
 
 p1 <- young_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(sp_wg_short_dll_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- young_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- young_sp %>% ggplot(aes(x=production, y=DLL1long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Production Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_cols) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
@@ -576,26 +576,26 @@ dll1long_sp_cor_comp = cor(d_demo_sp_comp$comprehension, d_demo_sp_comp$DLL1long
 
 p1 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=DLLsum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Matched Score") + 
   geom_abline(slope=length(sp_wg_short_dll_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- d_demo_sp_comp %>%
   ggplot(aes(x=comprehension, y=WGshort)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("CDI:WG Short Score") + 
   geom_abline(slope=length(sp_wg_short_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- d_demo_sp_comp %>% ggplot(aes(x=comprehension, y=DLL1long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WG LF Comp. Score") + ylab("DLL-ES1 Extended Score") + 
   geom_abline(slope=length(sp_wg_dll_long_colsC) / 428, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, nrow = 1, widths=c(4.5,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
@@ -610,25 +610,25 @@ The correlation of children's DLL1 Matched scores and their full CDI:WG comprehe
 ```{r spanish-dll2, echo=F, message=F, fig.width=10, fig.height=4}
 
 p1 <- old_sp %>% ggplot(aes(x=production, y=DLL1sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Matched Score") + 
   geom_abline(slope=length(sp_ws_short_dll_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 p2 <- old_sp %>% ggplot(aes(x=production, y=WGshort)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("CDI:WS Short Score") + 
   geom_abline(slope=length(sp_ws_short_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 60)
 
 p3 <- old_sp %>% ggplot(aes(x=production, y=DLL2long_sum)) + # , group=sex, color=sex
-  geom_point(alpha=.3) +  
+  geom_point(alpha=.3) + coord_flip() + 
   xlab("CDI:WS LF Production Score") + ylab("DLL-ES2 Extended Score") + 
   geom_abline(slope=length(sp_ws_dll_long_cols) / 680, intercept=0, linetype = 'dashed') +
   geom_smooth() + theme(legend.position = "none") +
-  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 100)
+  stat_cor(aes(label = ..r.label..), r.accuracy = 0.001, label.x = 60, label.y = 100)
 
 #grid.arrange(p1, p2, p3, nrow = 1, widths=c(4.5,3.9,3.9), heights=3.5)
 ggarrange(p1, p3, p2, nrow=1, common.legend = T)
